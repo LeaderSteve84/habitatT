@@ -6,7 +6,6 @@ HabitatT is a Real Estate Communication Management System designed to streamline
 
 - [Project Overview](#project-overview)
 - [Technologies Used](#technologies-used)
-- [Contributing](#contributing)
 - [Team](#team)
 - [License](#license)
 
@@ -27,22 +26,22 @@ HabitatT aims to provide a seamless communication channel for real estate profes
   - MongoDB
 
 ## Team
-_**Stephen Adah - Backend Developer**
-- Email: mailstephenreal@gmail.com
-- Twitter:
-- LinkedIn:
+- **Stephen Adah - Backend Developer**
+  - Email: mailstephenreal@gmail.com
+  - Twitter:
+  - LinkedIn:
 
-_**Emmanuel Ochoja - Frontend Developer**
-- Email: emmanuelochoja@yahoo.com
-- Twitter:
-- LinkedIn:
+- **Emmanuel Ochoja - Frontend Developer**
+  - Email: emmanuelochoja@yahoo.com
+  - Twitter:
+  - LinkedIn:
 
-_**Abdulakeem Abdullahi - Backend Developer**
-- Email: hakeemabdullah87@gmail.com
-- Twitter:
-- LinkedIn:
+- **Abdulakeem Abdullahi - Backend Developer**
+  - Email: hakeemabdullah87@gmail.com
+  - Twitter:
+  - LinkedIn:
 
-_**Joy Omale - Backend Developer**
-- Email: omalejoy83@gmail.com
-- Twitter:
-- LinkedIn:
+- **Joy Omale - Backend Developer**
+  - Email: omalejoy83@gmail.com
+  - Twitter:
+  - LinkedIn:
