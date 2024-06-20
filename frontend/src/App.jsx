@@ -1,4 +1,7 @@
+<<<<<<< Updated upstream
 import Navbar from "./components/landingPage/Navbar"
+=======
+>>>>>>> Stashed changes
 
 export default function App() {
   return (
