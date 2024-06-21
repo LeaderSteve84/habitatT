@@ -2,7 +2,7 @@ import logo from '../../assets/logo.jpeg';
 
 export default function Navbar() {
     return (
-        <div className="flex bg-stone-500 text-stone-50 justify-between p-4">
+        <div className="flex bg-stone-500 text-stone-50 justify-between items-center p-4">
             <img src={logo} alt="logo image" className='h-16 w-16'/>
             <ul className="flex gap-20">
                 <li>Home</li>
