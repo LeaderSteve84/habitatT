@@ -2,7 +2,7 @@ from flask import Flask
 from flask_pymongo import PyMongo
 from dotenv import load_dotenv
 import os
-# from flask_cors import CORS
+from flask_cors import CORS
 
 # Here we load environment variables from .env file
 load_dotenv()
@@ -16,6 +16,9 @@ def create_app():
     # Here we initialize MongoDB connection
     mongo_uri = os.getenv('MONGO_URI')
     mongo.init_app(app, uri=mongo_uri)
+
+    # We enable CORS for all domains on all routes
+    CORS(app)
     
     with app.app_context():
         # Import routes here to avoid circular imports
