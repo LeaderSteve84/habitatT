@@ -1,22 +1,26 @@
 from flask import Flask
+from flask_pymongo import PyMongo
+from dotenv import load_dotenv
 import os
-from pymongo.mongo_client import MongoClient
-from pymongo.server_api import ServerApi
-from falsk_cors import CORS
+# from flask_cors import CORS
 
-# Create a new client and connect to the server
-client = MongoClient(uri, server_api=ServerApi('1'))
+# Here we load environment variables from .env file
+load_dotenv()
+
+mongo = PyMongo()
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object('app.config.Config')
     
+    # Here we initialize MongoDB connection
     mongo_uri = os.getenv('MONGO_URI')
-    # Create a new client and connect to the server
-    client = MongoClient(uri=mongo_uri, server_api=ServerApi('1'))
+    mongo.init_app(app, uri=mongo_uri)
     
     with app.app_context():
         # Import routes here to avoid circular imports
-        from app.routes import hello
+        # Import and register blueprints
+        from app.routes.hello import hello_bp
+        app.register_blueprint(hello_bp)
 
     return app
