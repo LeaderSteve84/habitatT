@@ -32,7 +32,7 @@ def get_all_tenants():
     """find all tenants fron mongodb and
     return list of all the tenants
     """
-    tenants = mongodb.tenants.find()
+    tenants = mongodb.tenants.find({"active": True})
     tenant_list = [{
         "tenantId": str(tenant['_id']),
         "name": tenant['name'],
@@ -47,7 +47,7 @@ def get_all_tenants():
 # Get a Specific Tenant Details
 @tenant_bp.route('/api/admin/tenants/<tenant_id', methods=['GET'])
 def get_tenant(tenantId):
-    tenant = mongo.db.tenants.find_one({"_id": ObjectId(tenantId)})
+    tenant = mongo.db.tenants.find_one({"_id": ObjectId(tenantId), "active": True})
     if tenant:
         return jsonify({
             "name": tenant['name'],
@@ -81,3 +81,17 @@ def update_tenant(tenant_id):
     if result.matched_count == 0:
         return jsonify({"msg": "Tenant not found"}), 404
     return jsonify({"msg": "Tenant updated successfully"}), 200
+
+
+# deactivate/delete Tenant Account
+@tenant_bp.route('/api/admin/tenants/<tenant_id', methods=['DELETE'])
+def delete_tenant(tenant_id):
+    """update a specific tenant with a tenant_id.
+	setting the active attribute to False
+    Args:
+        tenant_id  (str): tenant unique id
+    """
+    result = mongo.db.tenants.update_one({"_id": ObjectId(tenant_id)}, {"$set": {"active": False}})
+    if result.matched_count:
+        return jsonify({"msg": "Tenant deactivated"}), 204
+    return jsonify({"error": "Tenant not found"}), 404
