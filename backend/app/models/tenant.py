@@ -3,11 +3,14 @@ from bson.objectid import ObjectId
 
 class Tenant:
     """class of the tenant instance"""
-    def __init__(self, name, dob, sex, contact_details, emergency_contact, lease_agreement_details, tenant_id=None, active=True):
+    def __init__(
+        self, name, dob, sex, contact_details, emergency_contact,
+        lease_agreement_details, tenant_id=None, active=True
+    ):
         """Initializer/object constructor.
         Args:
             name (dict): dictionary containing the fname and lname
-            dob  (time): date of birth 
+            dob  (time): date of birth
             sex  (str):  sex
             contact_details (dict): dict of phone, email, and address.
             emergency_contact (dict): dict name, phone, address
