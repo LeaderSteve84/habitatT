@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+"""app package init"""
 from flask import Flask
 from flask_pymongo import PyMongo
 from dotenv import load_dotenv
@@ -11,6 +13,7 @@ mongo = PyMongo()
 
 
 def create_app():
+    """return flask application"""
     app = Flask(__name__)
     app.config.from_object('app.config.Config')
 
