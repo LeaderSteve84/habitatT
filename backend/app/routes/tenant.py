@@ -5,6 +5,7 @@ from app.models.tenant import Tenant
 
 tenant_bp = Blueprint('tenant', __name__)
 
+
 # Create Tenant Account
 @tenant_bp.route('/api/admin/tenants', methods=['POST'])
 def create_tenant():
@@ -23,7 +24,9 @@ def create_tenant():
         lease_agreement_details=data['leaseAgreementDetails']
     )
     insert_id = mongo.db.tenants.insert_one(tenant.to_dict()).insert_id
-    return jsonify({"msg": "Tenant created successfully", "tenantId": str(inserted_id)}), 201
+    return jsonify(
+        {"msg": "Tenant created successfully", "tenantId": str(inserted_id)}
+    ), 201
 
 
 # Get all tenants
@@ -47,7 +50,9 @@ def get_all_tenants():
 # Get a Specific Tenant Details
 @tenant_bp.route('/api/admin/tenants/<tenant_id', methods=['GET'])
 def get_tenant(tenantId):
-    tenant = mongo.db.tenants.find_one({"_id": ObjectId(tenantId), "active": True})
+    tenant = mongo.db.tenants.find_one(
+        {"_id": ObjectId(tenantId), "active": True}
+    )
     if tenant:
         return jsonify({
             "name": tenant['name'],
@@ -77,7 +82,9 @@ def update_tenant(tenant_id):
         "emergency_contact": date['emergencyContact'],
         "lease_agreement_details": data['leaseAgreementDetails']
     }
-    result = mongo.db.tenants.update_one({"_id": ObjectId(tenant_id)}, {"$set": update_data})
+    result = mongo.db.tenants.update_one(
+        {"_id": ObjectId(tenant_id)}, {"$set": update_data}
+    )
     if result.matched_count == 0:
         return jsonify({"msg": "Tenant not found"}), 404
     return jsonify({"msg": "Tenant updated successfully"}), 200
@@ -87,11 +94,13 @@ def update_tenant(tenant_id):
 @tenant_bp.route('/api/admin/tenants/<tenant_id', methods=['DELETE'])
 def delete_tenant(tenant_id):
     """update a specific tenant with a tenant_id.
-	setting the active attribute to False
+    setting the active attribute to False
     Args:
         tenant_id  (str): tenant unique id
     """
-    result = mongo.db.tenants.update_one({"_id": ObjectId(tenant_id)}, {"$set": {"active": False}})
+    result = mongo.db.tenants.update_one(
+        {"_id": ObjectId(tenant_id)}, {"$set": {"active": False}}
+    )
     if result.matched_count:
         return jsonify({"msg": "Tenant deactivated"}), 204
     return jsonify({"error": "Tenant not found"}), 404
