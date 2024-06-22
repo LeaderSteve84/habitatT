@@ -29,7 +29,7 @@ def create_app():
         # Import and register blueprints
         from app.routes.hello import hello_bp
         app.register_blueprint(hello_bp)
-        from app.routes.tenant import tenant_bp
-        app.register_blueprint(tenant_bp)
+        from app.routes import bp
+        app.register_blueprint(bp)
 
     return app
