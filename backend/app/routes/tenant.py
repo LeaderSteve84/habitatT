@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+"""all routes for tenant CRUD operation"""
 from flask import Blueprint, request, jsonify
 from bson.objectid import ObjectId
 from app import mongo
