@@ -5,6 +5,7 @@ from bson.objectid import ObjectId
 from app import tenantsCollection
 from app.models.tenant import Tenant
 from pymongo.errors import PyMongoError
+from werkzeug.security import generate_password_hash
 
 
 tenant_bp = Blueprint('tenant', __name__)
@@ -22,11 +23,13 @@ def create_tenant():
     try:
         tenant = Tenant(
             name=data['name'],
+            password=generate_password_hash(data['password']),
             dob=data['DoB'],
             sex=data['sex'],
             contact_details=data['contactDetails'],
             emergency_contact=data['emergencyContact'],
-            lease_agreement_details=data['leaseAgreementDetails']
+            tenancy_period=data['tenancyPeriod'],
+            lease_agreement_details=data['leaseAgreementLink']
         )
     except KeyError as e:
         return jsonify({"error": f"Missing field {str(e)}"}), 400
@@ -55,11 +58,21 @@ def get_all_tenants():
         tenants = tenantsCollection.find({"active": True})
         tenants_list = [{
             "tenantId": str(tenant['_id']),
-            "name": tenant['name'],
+            "dateCreated": tenant['date_created'],
+            "fname": tenant['name']['fname'],
+            "lname": tenant['name']['lname'],
             "sex": tenant['sex'],
+            "DoB": tenant['dob'],
+            "phone": tenant['contact_details']['phone'], 
             "email": tenant['contact_details']['email'],
-            "phone": tenant['contact_details']['phone'],
-            "address": tenant['contact_details']['address']
+            "address": tenant['contact_details']['address'],
+            "rantageStarted": tenant['tenancy_period']['start'],
+            "rantageExpires": tenant['tenancy_period']['expires'],
+            "rentageArrears": tenant['tenancy_period']['arrears'],
+            "emergencyContactName": tenant['emergency_contact']['name'],
+            "emergencyContactPhone": tenant['emergency_contact']['phone'],
+            "emergencyContactAddress": tenant['emergency_contact']['address'],
+			"leaseAgreementDetails": tenant['lease_agreement_link']
         } for tenant in tenants]
         return jsonify(tenants_list), 200
     except PyMongoError as e:
@@ -75,12 +88,22 @@ def get_tenant(tenant_id):
         )
         if tenant:
             return jsonify({
-                "name": tenant['name'],
-                "dob": tenant['dob'],
-                "sex": tenant['sex'],
-                "contact_details": tenant['contact_details'],
-                "emergency_contact": tenant['emergency_contact'],
-                "lease_agreement_details": tenant['lease_agreement_details']
+				"tenantId": str(tenant['_id']),
+            	"dateCreated": tenant['date_created'],
+            	"fname": tenant['name']['fname'],
+            	"lname": tenant['name']['lname'],
+            	"sex": tenant['sex'],
+            	"DoB": tenant['dob'],
+            	"phone": tenant['contact_details']['phone'],
+            	"email": tenant['contact_details']['email'],
+            	"address": tenant['contact_details']['address'],
+            	"rantageStarted": tenant['tenancy_period']['start'],
+            	"rantageExpires": tenant['tenancy_period']['expires'],
+            	"rentageArrears": tenant['tenancy_period']['arrears'],
+            	"emergencyContactName": tenant['emergency_contact']['name'],
+            	"emergencyContactPhone": tenant['emergency_contact']['phone'],
+            	"emergencyContactAddress": tenant['emergency_contact']['address'],
+                "lease_agreement_details": tenant['lease_agreement_link']
             }), 200
         else:
             return jsonify({"error": "Tenant not found"}), 404
@@ -105,7 +128,8 @@ def update_tenant(tenant_id):
             "sex": data['sex'],
             "contact_details": data['contactDetails'],
             "emergency_contact": data['emergencyContact'],
-            "lease_agreement_details": data['leaseAgreementDetails']
+			"tenancy_period": data['tenancyPeriod'],
+            "lease_agreement_details": data['leaseAgreementLink']
         }
     except keyError as e:
         return jsonify({"error": f"Missing field {str(e)}"}), 400
