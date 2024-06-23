@@ -64,7 +64,7 @@ def get_all_tenants():
             "lname": tenant['name']['lname'],
             "sex": tenant['sex'],
             "DoB": tenant['dob'],
-            "phone": tenant['contact_details']['phone'], 
+            "phone": tenant['contact_details']['phone'],
             "email": tenant['contact_details']['email'],
             "address": tenant['contact_details']['address'],
             "rantageStarted": tenant['tenancy_period']['start'],
@@ -73,7 +73,7 @@ def get_all_tenants():
             "emergencyContactName": tenant['emergency_contact']['name'],
             "emergencyContactPhone": tenant['emergency_contact']['phone'],
             "emergencyContactAddress": tenant['emergency_contact']['address'],
-			"leaseAgreementDetails": tenant['lease_agreement_details']
+            "leaseAgreementDetails": tenant['lease_agreement_details']
         } for tenant in tenants]
         return jsonify(tenants_list), 200
     except PyMongoError as e:
@@ -89,21 +89,26 @@ def get_tenant(tenant_id):
         )
         if tenant:
             return jsonify({
-				"tenantId": str(tenant['_id']),
-            	"dateCreated": tenant['date_created'],
-            	"fname": tenant['name']['fname'],
-            	"lname": tenant['name']['lname'],
-            	"sex": tenant['sex'],
-            	"DoB": tenant['dob'],
-            	"phone": tenant['contact_details']['phone'],
-            	"email": tenant['contact_details']['email'],
-            	"address": tenant['contact_details']['address'],
-            	"rantageStarted": tenant['tenancy_period']['start'],
-            	"rantageExpires": tenant['tenancy_period']['expires'],
-            	"rentageArrears": tenant['tenancy_period']['arrears'],
-            	"emergencyContactName": tenant['emergency_contact']['name'],
-            	"emergencyContactPhone": tenant['emergency_contact']['phone'],
-            	"emergencyContactAddress": tenant['emergency_contact']['address'],
+                "tenantId": str(tenant['_id']),
+                "dateCreated": tenant['date_created'],
+                "fname": tenant['name']['fname'],
+                "lname": tenant['name']['lname'],
+                "sex": tenant['sex'],
+                "DoB": tenant['dob'],
+                "phone": tenant['contact_details']['phone'],
+                "email": tenant['contact_details']['email'],
+                "address": tenant['contact_details']['address'],
+                "rantageStarted": tenant['tenancy_period']['start'],
+                "rantageExpires": tenant['tenancy_period']['expires'],
+                "rentageArrears": tenant['tenancy_period']['arrears'],
+                "emergencyContactName": tenant['emergency_contact']['name'],
+                "emergencyContactPhone": tenant['emergency_contact']['phone'],
+                "emergencyContactAddress": tenant[
+                    'emergency_contact'
+                ]
+                [
+                    'address'
+                ],
                 "lease_agreement_details": tenant['lease_agreement_details']
             }), 200
         else:
@@ -131,7 +136,7 @@ def update_tenant(tenant_id):
             "sex": data['sex'],
             "contact_details": data['contactDetails'],
             "emergency_contact": data['emergencyContact'],
-			"tenancy_period": data['tenancyPeriod'],
+            "tenancy_period": data['tenancyPeriod'],
             "lease_agreement_details": data['leaseAgreementDetails']
         }
     except KeyError as e:
@@ -167,5 +172,7 @@ def delete_tenant(tenant_id):
         if result.matched_count:
             return jsonify({"msg": "Tenant deactivated"}), 204
         return jsonify({"error": "Tenant not found"}), 404
+    except InvalidId:
+        return jsonify({"error": "Invalid tenant ID format"}), 400
     except PyMongoError as e:
         return jsonify({"error": str(e)}), 500

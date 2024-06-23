@@ -3,6 +3,7 @@
 from bson.objectid import ObjectId
 from datetime import datetime
 
+
 class Tenant:
     """class of the tenant instance"""
     def __init__(
