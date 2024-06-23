@@ -2,7 +2,7 @@
 """All routes for tenant CRUD operations"""
 from flask import Blueprint, request, jsonify
 from bson.objectid import ObjectId
-from anpp import tenantsCollection
+from app import tenantsCollection
 from app.models.tenant import Tenant
 from pymongo.errors import PyMongoError
 
