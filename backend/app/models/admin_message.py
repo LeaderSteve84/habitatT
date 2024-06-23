@@ -31,4 +31,3 @@ class AdminMessage:
             "title": self.title,
             "date": self.date
         }
-    
