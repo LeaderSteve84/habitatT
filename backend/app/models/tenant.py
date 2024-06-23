@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """model for tenants"""
 from bson.objectid import ObjectId
-from datetime import datatime
+from datetime import datetime
 
 class Tenant:
     """class of the tenant instance"""
