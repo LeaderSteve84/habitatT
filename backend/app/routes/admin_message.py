@@ -86,7 +86,7 @@ def update_message(message_id):
 
 # Delete Admin Message
 @admin_message_bp.route('/api/admin/messages/<message_id>', methods=['DELETE'])
-def delete_message (message_id):
+def delete_message(message_id):
     """Delete a specific admin message with a message_id
     Args:
     message_id  (str): message unique id
