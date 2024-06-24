@@ -2,7 +2,7 @@
 """All routes for property CRUD operations"""
 from flask import Blueprint, request, jsonify
 from bson.objectid import ObjectId
-from app import propertiesManageCollection
+from app import propMngCollection
 from app.models.property import Property
 from pymongo.errors import PyMongoError
 
@@ -31,12 +31,14 @@ def create_property():
         return jsonify({"error": str(e)}), 400
 
     try:
-        insert_result = propertiesManageCollection.insert_one(property.to_dict())
+        insert_result = propMngCollection.insert_one(property.to_dict())
     except Exception as e:
         return jsonify({"eror": str(e)}), 500
 
     property_id = insert_result.inserted_id
-    return jsonify({"msg": "property created successfully", "propertyId": str(property_id)}), 201
+    return jsonify(
+        {"msg": "prop. created successfully", "prop_Id": str(property_id)}
+    ), 201
 
 
 # Get All Properties
@@ -47,7 +49,7 @@ def get_all_properties():
     """
 
     try:
-        properties = propertiesManageCollection.find()
+        properties = propMngCollection.find()
         properties_list = [{
             "propertyId": str(property['_id']),
             "dateCreated": property['date_created'],
@@ -67,7 +69,7 @@ def get_property(property_id):
     """Retrieve details of a specific property by ID.
     """
     try:
-        property = propertiesManageCollection.find_one({"_id": ObjectId(property_id)})
+        property = propMngCollection.find_one({"_id": ObjectId(property_id)})
         if property:
             return jsonify({
                 "propertyId": str(property['_id']),
@@ -103,7 +105,7 @@ def update_property(property_id):
         return jsonify({"error": str(e)}), 400
 
     try:
-        result = propertiesManageCollection.update_one(
+        result = propMngCollection.update_one(
             {"_id": ObjectId(property_id)}, {"$set": update_data}
         )
         if result.matched_count == 0:
@@ -112,12 +114,13 @@ def update_property(property_id):
     except PyMongoError as e:
         return jsonify({"error": str(e)}), 500
 
+
 # Delte Property
 @property_bp.route('/api/admin/properties/<property_id>', methods=['DELETE'])
 def delete_property(property_id):
     """Dlete a specific property by ID."""
     try:
-        result = propertiesManageCollection.delete_one({"_id": ObjectId(property_id)})
+        result = propMngCollection.delete_one({"_id": ObjectId(property_id)})
         if result.deleted_count:
             return jsonify({"msg": "Property deleted successfully"}), 204
         return jsonify({"error": "Property not found"}), 404
