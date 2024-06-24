@@ -22,6 +22,17 @@ def create_tenant():
     """
     data = request.json
     try:
+        # Check if a tenant with same email or phone number already exist
+        if tenantsCollection.find_one({
+            "$or": [
+                {"contact_details.email": data['contactDetails']['email']},
+                {"contact_details.phone": data['contactDetails']['phone']}
+            ]
+        }):
+            return jsonify(
+                {"error": "Tenant with same email or phone exist"}
+            )
+
         tenant = Tenant(
             name=data['name'],
             password=generate_password_hash(data['password']),
