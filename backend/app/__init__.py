@@ -7,7 +7,11 @@ from pymongo import MongoClient, errors
 from pymongo.collection import Collection
 from pymongo.database import Database
 from app.config import Config
-
+from flask_mail import Mail, Message
+from flask_jwt_extended import JWTManager
+import logging
+# Initialize mail instance globally
+mail = Mail()
 
 # Function to initialize MongoDB client
 def init_mongo_client(connection_string: str) -> MongoClient:
@@ -39,12 +43,21 @@ except (errors.ConnectionFailure, errors.ConfigurationError) as e:
 def create_app():
     """return flask application"""
     app = Flask(__name__)
-
+    
     # Load configuration from app.config
     app.config.from_object(Config)
-    
+    mail.init_app(app)
+    jwt = JWTManager(app)
     # Enable CORS for all domains on all route
     CORS(app)
+    # Configure logging
+    if not app.debug:
+        app.logger.setLevel(logging.DEBUG)
+        stream_handler = logging.StreamHandler()
+        stream_handler.setLevel(logging.DEBUG)
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        stream_handler.setFormatter(formatter)
+        app.logger.addHandler(stream_handler)
 
     with app.app_context():
         # Import routes here to avoid circular imports
