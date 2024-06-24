@@ -6,7 +6,7 @@ from datetime import datetime
 
 class AdminMessage:
     """Class of the admin message instance"""
-    def __init__(self, message, title, date, message_id=None):
+    def __init__(self, message, title, message_id=None):
         """Initializer/object constructor.
         Args:
             message (str): The message content
@@ -18,7 +18,6 @@ class AdminMessage:
         self.date_created = datetime.now()
         self.message = message
         self.title = title
-        self.date = date
 
     def to_dict(self):
         """returns the dictionary of all
@@ -28,6 +27,5 @@ class AdminMessage:
             "_id": self.message_id,
             "date_created": self.date_created,
             "message": self.message,
-            "title": self.title,
-            "date": self.date
+            "title": self.title
         }
