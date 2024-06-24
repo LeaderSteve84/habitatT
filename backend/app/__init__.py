@@ -34,10 +34,15 @@ try:
     adminMessagesCollection: Collection = database.get_collection(
         "adminMessages"
     )
+    propertiesManageCollection: Collection = database.get_collection(
+        "propertiesManage"
+    )
 except (errors.ConnectionFailure, errors.ConfigurationError) as e:
     mongo_client = None
     database = None
     tenantsCollection = None
+    adminMessagesCollection = None
+    propertiesManageCollection = None
     print(f"Database initialization failed: {e}")
 
 
