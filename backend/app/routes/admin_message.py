@@ -2,7 +2,7 @@
 """All routes for admin message CRUD operations"""
 from flask import Blueprint, request, jsonify
 from bson.objectid import ObjectId
-from app import messagesCollection
+from app import adminMessagesCollection
 from app.models.admin_message import AdminMessage
 from pymongo.errors import PyMongoError
 
@@ -22,7 +22,6 @@ def create_message():
         message = AdminMessage(
             message=data['message'],
             title=data['title'],
-            date=data['date']
         )
     except KeyError as e:
         return jsonify({"error": f"Missing field {str(e)}"}), 400
@@ -30,7 +29,7 @@ def create_message():
         return jsonify({"error": str(e)}), 400
 
     try:
-        insert_result = messagesCollection.insert_one(message.to_dict())
+        insert_result = adminMessagesCollection.insert_one(message.to_dict())
     except PyMongoError as e:
         return jsonify({"error": str(e)}), 500
     message_id = insert_result.inserted_id
@@ -44,13 +43,12 @@ def create_message():
 def get_all_messages():
     """Find all messages from MongoDB and return list of all the messages"""
     try:
-        messages = messagesCollection.find()
+        messages = adminMessagesCollection.find()
         messages_list = [{
             "messageId": str(message['_id']),
             "dateCreated": message['date_created'],
             "message": message['message'],
-            "title": message['title'],
-            "date": message['date']
+            "title": message['title']
         } for message in messages]
         return jsonify(messages_list), 200
     except PyMongoError as e:
@@ -60,5 +58,45 @@ def get_all_messages():
 # Update Specific Admin Message
 @admin_message_bp.route('/api/admin/messages/<message_id>', methods=['PUT'])
 def update_message(message_id):
+    """Update a specific admin message with a message_id.
+    Args:
+        message_id  (str): message unique id
     """
+    data = request.json
+    try:
+        update_data = {
+            "message": data['message'],
+            "title": data['title']
+        }
+    except KeyError as e:
+        return jsonify({"error": f"Missing field {str(e)"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+    try:
+        result = adminMessagesCollection.update_one(
+            {"_id": ObjectId(message_id)}, {"$set": update_data}
+        )
+        if result.matched_count == 0:
+            return jsonify({"msg": "Message not found"}), 404
+        return jsonify({"msg": "Message updated successfully"}), 200
+        except PyMongoError as e:
+            return jsonify({"error": str(e)}), 500
+
+
+# Delete Admin Message
+@admin_message_bp.route('/api/admin/messages/<message_id>', methods=['DELETE'])
+def delete_message (message_id):
+    """Delete a specific admin message with a message_id
+    Args:
+    message_id  (str): message unique id
     """
+    try:
+        result = adminMessagesCollection.delete_one(
+            {"_id": ObjectId(message_id)}
+        )
+        if result.deleted_count == 0:
+            return jsonify({"error": "Message not found"}), 404
+        return jsonify({"msg": "Message deleted successfully"}), 204
+    except PyMongoError as e:
+        return jsonify({"error": str(e)}), 500
