@@ -34,7 +34,7 @@ try:
     adminMessagesCollection: Collection = database.get_collection(
         "adminMessages"
     )
-    propertiesManageCollection: Collection = database.get_collection(
+    propMngCollection: Collection = database.get_collection(
         "propertiesManage"
     )
 except (errors.ConnectionFailure, errors.ConfigurationError) as e:
