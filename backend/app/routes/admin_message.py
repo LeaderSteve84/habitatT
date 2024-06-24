@@ -69,7 +69,7 @@ def update_message(message_id):
             "title": data['title']
         }
     except KeyError as e:
-        return jsonify({"error": f"Missing field {str(e)"}), 400
+        return jsonify({"error": f"Missing field {str(e)}"}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
@@ -80,8 +80,8 @@ def update_message(message_id):
         if result.matched_count == 0:
             return jsonify({"msg": "Message not found"}), 404
         return jsonify({"msg": "Message updated successfully"}), 200
-        except PyMongoError as e:
-            return jsonify({"error": str(e)}), 500
+    except PyMongoError as e:
+        return jsonify({"error": str(e)}), 500
 
 
 # Delete Admin Message
