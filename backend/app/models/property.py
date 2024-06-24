@@ -8,7 +8,10 @@ from datetime import datetime
 
 class Property:
     """Class representing a property instance"""
-    def __init__(self, address, property_type, unit_availability, rental_fees, property_id=None):
+    def __init__(
+        self, address, property_type, unit_availability,
+        rental_fees, property_id=None
+    ):
         """
         Initializer/object constructor.
         Args:
@@ -23,7 +26,6 @@ class Property:
         self.property_type = property_type
         self.unit_availability = unit_availability
         self.rental_fees = rental_fees
-
 
     def to_dict(self):
         """Returns the dictionary of all the property attributes"""
