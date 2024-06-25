@@ -34,10 +34,12 @@ try:
     # Select database and collection from Atlas
     database: Database = mongo_client.get_database("habitatTdb")
     tenantsCollection: Collection = database.get_collection("tenants")
+    adminsCollection: Collection = database.get_collection("admins")
 except (errors.ConnectionFailure, errors.ConfigurationError) as e:
     mongo_client = None
     database = None
     tenantsCollection = None
+    adminsCollection = None
     print(f"Database initialization failed: {e}")
 
 def create_app():

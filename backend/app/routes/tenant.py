@@ -1,24 +1,35 @@
 #!/usr/bin/env python3
 """All routes for tenant CRUD operations"""
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, url_for
 from bson.objectid import ObjectId
-from app import tenantsCollection
+from app import tenantsCollection, mail, Message
 from app.models.tenant import Tenant
 from pymongo.errors import PyMongoError
 from werkzeug.security import generate_password_hash
 from bson.errors import InvalidId
-
+import uuid
+import logging
 
 tenant_bp = Blueprint('tenant', __name__)
+reset_tokens = {}
 
+# Set up basic logging
+logging.basicConfig(level=logging.DEBUG)
+
+# Utility function to send emails
+def send_email(subject, recipients, body):
+    msg = Message(subject=subject, recipients=recipients, body=body)
+    try:
+        mail.send(msg)
+        logging.debug(f"Email sent to {recipients}")
+    except Exception as e:
+        logging.error(f"Failed to send email to {recipients}: {e}")
 
 # Create Tenant Account
 @tenant_bp.route('/api/admin/tenants', methods=['POST'])
 def create_tenant():
-    """create tenant as instance of Tenant.
-       post tenant to mongodb database.
-       Return: "msg": "Tenant created successfully"
-       and success status
+    """Create tenant as instance of Tenant, post tenant to MongoDB database,
+       and send notification email with a reset password link.
     """
     data = request.json
     try:
@@ -40,21 +51,25 @@ def create_tenant():
     try:
         insert_result = tenantsCollection.insert_one(tenant.to_dict())
     except Exception as e:
-        return jsonify(
-            {"error": str(e)}, 500
-        ), 500
+        return jsonify({"error": str(e)}), 500
+
     tenant_id = insert_result.inserted_id
-    return jsonify(
-        {"msg": "Tenant created successfully", "tenantId": str(tenant_id)}
-    ), 201
+
+    # Send notification email with a reset password link
+    email = data['contactDetails']['email']
+    reset_token = str(uuid.uuid4())
+    reset_tokens[reset_token] = email
+    reset_url = url_for('main.auth_bp.reset_password', token=reset_token, _external=True)
+    email_body = f"Dear {data['name']['fname']},\n\nYour tenant account has been created successfully. Please use the following link to set your password: {reset_url}\n\nThank you."
+    send_email("Tenant Account Created", [email], email_body)
+
+    return jsonify({"msg": "Tenant created successfully", "tenantId": str(tenant_id)}), 201
 
 
 # Get all tenants
 @tenant_bp.route('/api/admin/tenants', methods=['GET'])
 def get_all_tenants():
-    """find all tenants fron mongodb and
-    return list of all the tenants
-    """
+    """Find all tenants from MongoDB and return a list of all the tenants."""
     try:
         tenants = tenantsCollection.find({"active": True})
         tenants_list = [{
@@ -103,12 +118,7 @@ def get_tenant(tenant_id):
                 "rentageArrears": tenant['tenancy_period']['arrears'],
                 "emergencyContactName": tenant['emergency_contact']['name'],
                 "emergencyContactPhone": tenant['emergency_contact']['phone'],
-                "emergencyContactAddress": tenant[
-                    'emergency_contact'
-                ]
-                [
-                    'address'
-                ],
+                "emergencyContactAddress": tenant['emergency_contact']['address'],
                 "lease_agreement_details": tenant['lease_agreement_details']
             }), 200
         else:
@@ -124,9 +134,9 @@ def get_tenant(tenant_id):
 # Update Specific Tenant Details
 @tenant_bp.route('/api/admin/tenants/<tenant_id>', methods=['PUT'])
 def update_tenant(tenant_id):
-    """update a specific tenant with a tenant_id.
+    """Update a specific tenant with a tenant_id.
     Args:
-        tenant_id  (str): tenant unique id
+        tenant_id (str): tenant unique id
     """
     data = request.json
     try:
@@ -160,10 +170,9 @@ def update_tenant(tenant_id):
 # Deactivate/Delete Tenant Account
 @tenant_bp.route('/api/admin/tenants/<tenant_id>', methods=['DELETE'])
 def delete_tenant(tenant_id):
-    """update a specific tenant with a tenant_id.
-    setting the active attribute to False
+    """Update a specific tenant with a tenant_id, setting the active attribute to False.
     Args:
-        tenant_id  (str): tenant unique id
+        tenant_id (str): tenant unique id
     """
     try:
         result = tenantsCollection.update_one(
