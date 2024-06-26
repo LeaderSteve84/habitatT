@@ -8,8 +8,8 @@ class Tenant:
     """class of the tenant instance"""
     def __init__(
         self, name, password, dob, sex, contact_details, emergency_contact,
-        tenancy_period, lease_agreement_details, tenant_id=None,
-        active=True
+        tenancy_info, lease_agreement_details, date_updated=None,
+        tenant_id=None, active=True
     ):
         """Initializer/object constructor.
         Args:
@@ -23,13 +23,14 @@ class Tenant:
         """
         self.tenant_id = tenant_id if tenant_id else ObjectId()
         self.date_created = datetime.now()
+        self.date_updated = date_updated if date_updated else datetime.now()
         self.name = name
         self.password = password  # hashed password
         self.dob = dob
         self.sex = sex
         self.contact_details = contact_details
         self.emergency_contact = emergency_contact
-        self.tenancy_period = tenancy_period
+        self.tenancy_info = tenancy_info
         self.lease_agreement_details = lease_agreement_details
         self.active = active
 
@@ -38,13 +39,14 @@ class Tenant:
         return {
             "_id": self.tenant_id,
             "date_created": self.date_created,
+            "date_updated": self.date_updated,
             "name": self.name,
             "password": self.password,
             "dob": self.dob,
             "sex": self.sex,
             "contact_details": self.contact_details,
             "emergency_contact": self.emergency_contact,
-            "tenancy_period": self.tenancy_period,
+            "tenancy_info": self.tenancy_info,
             "lease_agreement_details": self.lease_agreement_details,
             "active": self.active
         }

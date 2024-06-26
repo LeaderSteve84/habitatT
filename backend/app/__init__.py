@@ -26,6 +26,7 @@ def init_mongo_client(connection_string: str) -> MongoClient:
         print(f"Configuration error: {e}")
         raise
 
+
 # Mongo client initialization
 CONNECTION_STRING = Config.MONGO_URI
 
@@ -33,12 +34,25 @@ try:
     mongo_client: MongoClient = init_mongo_client(CONNECTION_STRING)
     # Select database and collection from Atlas
     database: Database = mongo_client.get_database("habitatTdb")
-    tenantsCollection: Collection = database.get_collection("tenants")
+    tenantsCollection: Collection = database.get_collection("tenantsTest")
+    adminMessagesCollection: Collection = database.get_collection(
+        "adminMessages"
+    )
+    propertiesCollection: Collection = database.get_collection(
+        "properties"
+    )
+    listingCollection: Collection = database.get_collection("listing")
+    logRequestsCollection: Collection = database.get_collection("logRequests")
 except (errors.ConnectionFailure, errors.ConfigurationError) as e:
     mongo_client = None
     database = None
     tenantsCollection = None
+    adminMessagesCollection = None
+    propertiesCollection = None
+    listingCollection = None
+    logRequestsCollection = None
     print(f"Database initialization failed: {e}")
+
 
 def create_app():
     """return flask application"""
@@ -48,6 +62,7 @@ def create_app():
     app.config.from_object(Config)
     mail.init_app(app)
     jwt = JWTManager(app)
+
     # Enable CORS for all domains on all route
     CORS(app)
     # Configure logging
