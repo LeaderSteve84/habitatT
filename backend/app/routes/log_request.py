@@ -5,6 +5,8 @@ from bson.objectid import ObjectId
 from app import logRequestsCollection
 from app.models.log_request import LogRequest
 from pymongo.errors import PyMongoError
+from bson.errors import InvalidId
+
 
 log_request_bp = Blueprint('log_request', __name__)
 
@@ -81,7 +83,7 @@ def get_log_request(request_id):
         if log_request:
             return jsonify({
                 "requestId": str(log_request['_id']),
-                "loggedBy": log_request['logged_by'], 
+                "loggedBy": log_request['logged_by'],
                 "submittedDate": log_request['submitted_date'],
                 "requestType": log_request['request_type'],
                 "urgencyLevel": log_request['urgency_level'],
@@ -91,6 +93,8 @@ def get_log_request(request_id):
             }), 200
         else:
             return jsonify({"error": "Log request not found"}), 404
+    except InvalidId:
+        return jsonify({"error": "Invalid tenant ID format"}), 404
     except PyMongoError as e:
         return jsonify({"error": str(e)}), 500
     except Exception as e:
@@ -124,6 +128,8 @@ def update_log_request(request_id):
         if result.matched_count == 0:
             return jsonify({"msg": "Log request not found"}), 404
         return jsonify({"msg": "Log request updated successfully"}), 200
+    except InvalidId:
+        return jsonify({"error": "Invalid tenant ID format"}), 404
     except PyMongoError as e:
         return jsonify({"error": str(e)}), 500
 
@@ -152,6 +158,8 @@ def update_log_request_status(request_id):
         if result.matched_count == 0:
             return jsonify({"msg": "Log request not found"}), 404
         return jsonify({"msg": "Log request status updated successfully"}), 200
+    except InvalidId:
+        return jsonify({"error": "Invalid tenant ID format"}), 404
     except PyMongoError as e:
         return jsonify({"error": str(e)}), 500
 
@@ -180,6 +188,8 @@ def archive_log_request(request_id):
         if result.matched_count == 0:
             return jsonify({"msg": "Log request not found"}), 404
         return jsonify({"msg": "Log request archived successfully"}), 200
+    except InvalidId:
+        return jsonify({"error": "Invalid tenant ID format"}), 404
     except PymongoError as e:
         return jsonify({"error": str(e)}), 500
 
@@ -208,5 +218,7 @@ def close_log_request(request_id):
         if result.matched_count == 0:
             return jsonify({"msg": "Log request not found"}), 404
         return jsonify({"msg": "Log request closed successfully"}), 200
+    except InvalidId:
+        return jsonify({"error": "Invalid tenant ID format"}), 404
     except PyMongoError as e:
         return jsonify({"error": str(e)}), 500

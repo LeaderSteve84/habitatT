@@ -5,6 +5,7 @@ from bson.objectid import ObjectId
 from app import propertiesCollection
 from app.models.property import Property
 from pymongo.errors import PyMongoError
+from bson.errors import InvalidId
 
 
 property_bp = Blueprint('property', __name__)
@@ -83,6 +84,8 @@ def get_specific_property(property_id):
             }), 200
         else:
             return jsonify({"error": "Property not found"}), 404
+    except InvalidId:
+        return jsonify({"error": "Invalid tenant ID format"}), 404
     except PyMongoError as e:
         return jsonify({"error": str(e)}), 500
     except Exception as e:
@@ -113,6 +116,8 @@ def update_property(property_id):
         if result.matched_count == 0:
             return jsonify({"msg": "Property not found"}), 404
         return jsonify({"msg": "Property updated successfully"}), 200
+    except InvalidId:
+        return jsonify({"error": "Invalid tenant ID format"}), 404
     except PyMongoError as e:
         return jsonify({"error": str(e)}), 500
 
@@ -128,5 +133,7 @@ def delete_property(property_id):
         if result.deleted_count:
             return jsonify({"msg": "Property deleted successfully"}), 204
         return jsonify({"error": "Property not found"}), 404
+    except InvalidId:
+        return jsonify({"error": "Invalid tenant ID format"}), 404
     except PyMongoError as e:
         return jsonify({"error": str(e)}), 500

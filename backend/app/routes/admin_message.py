@@ -5,6 +5,7 @@ from bson.objectid import ObjectId
 from app import adminMessagesCollection
 from app.models.admin_message import AdminMessage
 from pymongo.errors import PyMongoError
+from bson.errors import InvalidId
 
 
 admin_message_bp = Blueprint('admin_message', __name__)
@@ -80,6 +81,8 @@ def update_message(message_id):
         if result.matched_count == 0:
             return jsonify({"msg": "Message not found"}), 404
         return jsonify({"msg": "Message updated successfully"}), 200
+    except InvalidId:
+        return jsonify({"error": "Invalid tenant ID format"}), 404
     except PyMongoError as e:
         return jsonify({"error": str(e)}), 500
 
@@ -98,5 +101,7 @@ def delete_message(message_id):
         if result.deleted_count == 0:
             return jsonify({"error": "Message not found"}), 404
         return jsonify({"msg": "Message deleted successfully"}), 204
+    except InvalidId:
+        return jsonify({"error": "Invalid tenant ID format"}), 404
     except PyMongoError as e:
         return jsonify({"error": str(e)}), 500

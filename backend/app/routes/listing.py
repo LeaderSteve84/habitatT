@@ -5,6 +5,7 @@ from bson.objectid import ObjectId
 from app import listingCollection
 from app.models.listing import Listing
 from pymongo.errors import PyMongoError
+from bson.errors import InvalidId
 
 
 listing_bp = Blueprint('listing', __name__)
@@ -37,7 +38,11 @@ def create_property_listing():
 
     listing_id = insert_result.inserted_id
     return jsonify(
-        {"msg": "list. created successfully", "listed_prop_Id": str(listing_id)}
+        {
+            "msg": "list. created successfully", "listed_prop_Id": str(
+                listing_id
+            )
+        }
     ), 201
 
 
@@ -64,12 +69,16 @@ def get_all_listed_properties():
 
 
 # Get Specific listed Property Details
-@listing_bp.route('/api/admin/properties-listing/<listing_id>', methods=['GET'])
+@listing_bp.route(
+    '/api/admin/properties-listing/<listing_id>', methods=['GET']
+)
 def get_listed_property(listing_id):
     """Retrieve details of a specific listed property by ID.
     """
     try:
-        listed_property = listingCollection.find_one({"_id": ObjectId(listing_id)})
+        listed_property = listingCollection.find_one(
+            {"_id": ObjectId(listing_id)}
+        )
         if listed_property:
             return jsonify({
                 "propertyId": str(listed_property['_id']),
@@ -81,6 +90,8 @@ def get_listed_property(listing_id):
             }), 200
         else:
             return jsonify({"error": "Property not found"}), 404
+    except InvalidId:
+        return jsonify({"error": "Invalid tenant ID format"}), 404
     except PyMongoError as e:
         return jsonify({"error": str(e)}), 500
     except Exception as e:
@@ -88,7 +99,9 @@ def get_listed_property(listing_id):
 
 
 # Update Property Details
-@listing_bp.route('/api/admin/properties-listing/<listing_id>', methods=['PUT'])
+@listing_bp.route(
+    '/api/admin/properties-listing/<listing_id>', methods=['PUT']
+)
 def update_property(listing_id):
     """Update a specific listed property by ID."""
     data = request.json
@@ -111,18 +124,26 @@ def update_property(listing_id):
         if result.matched_count == 0:
             return jsonify({"msg": "Listed property not found"}), 404
         return jsonify({"msg": "Listed property updated successfully"}), 200
+    except InvalidId:
+        return jsonify({"error": "Invalid tenant ID format"}), 404
     except PyMongoError as e:
         return jsonify({"error": str(e)}), 500
 
 
 # Delete Listed Property
-@listing_bp.route('/api/admin/properties-listing/<listing_id>', methods=['DELETE'])
+@listing_bp.route(
+    '/api/admin/properties-listing/<listing_id>', methods=['DELETE']
+)
 def delete_listed_property(listing_id):
     """Delete a specific listed property by ID."""
     try:
         result = listingCollection.delete_one({"_id": ObjectId(listing_id)})
         if result.deleted_count:
-            return jsonify({"msg": "listed Property deleted successfully"}), 204
+            return jsonify(
+                {"msg": "listed Property deleted successfully"}
+            ), 204
         return jsonify({"error": "listed property not found"}), 404
+    except InvalidId:
+        return jsonify({"error": "Invalid tenant ID format"}), 404
     except PyMongoError as e:
         return jsonify({"error": str(e)}), 500

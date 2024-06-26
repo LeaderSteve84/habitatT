@@ -199,7 +199,9 @@ def delete_tenant(tenant_id):
 
 
 # Update Tenant Contact Information
-@tenant_bp.route('/api/tenants/<tenant_id>/updatecontacts', methods=['PUT'])
+@tenant_bp.route(
+    '/api/tenants/<tenant_id>/emergencycontacts', methods=['PUT']
+)
 def update_tenant_contact(tenant_id):
     """Update contact information for a specific tenant"""
     data = request.json
@@ -207,6 +209,15 @@ def update_tenant_contact(tenant_id):
         update_data = {
             "emergency_contact": data['emergencyContact'],
         }
+    except KeyError as e:
+        return jsonify({"error": f"Missing field {str(e)}"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+    try:
+        result = tenantsCollection.update_one(
+            {"_id": ObjectId(tenant_id)}, {"$set": update_data}
+        )
         if result.matched_count == 0:
             return jsonify({"msg": "Tenant not found"}), 404
         return jsonify(
@@ -220,7 +231,7 @@ def update_tenant_contact(tenant_id):
 
 # Get Lease Agreements
 @tenant_bp.route('/api/tenants/<tenant_id>/lease-agreements', methods=['GET'])
-def get_lease_agreements(tenat_id):
+def get_lease_agreements(tenant_id):
     """Get lease agreements for a specific tenant"""
     try:
         tenant = tenantsCollection.find_one(
@@ -228,7 +239,7 @@ def get_lease_agreements(tenat_id):
         )
         if tenant:
             return jsonify({
-                "leaseAgreementDetails" tenant['lease_agreement_details']
+                "leaseAgreementDetails": tenant['lease_agreement_details']
             }), 200
         else:
             return jsonify({"error": "Tenant not found"}), 404
