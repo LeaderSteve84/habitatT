@@ -30,7 +30,7 @@ try:
     mongo_client: MongoClient = init_mongo_client(CONNECTION_STRING)
     # Select database and collection from Atlas
     database: Database = mongo_client.get_database("habitatTdb")
-    tenantsCollection: Collection = database.get_collection("tenants")
+    tenantsCollection: Collection = database.get_collection("tenantsTest")
     adminMessagesCollection: Collection = database.get_collection(
         "adminMessages"
     )
@@ -38,6 +38,7 @@ try:
         "properties"
     )
     listingCollection: Collection = database.get_collection("listing")
+    logRequestsCollection: Collection = database.get_collection("logRequests")
 except (errors.ConnectionFailure, errors.ConfigurationError) as e:
     mongo_client = None
     database = None
@@ -45,6 +46,7 @@ except (errors.ConnectionFailure, errors.ConfigurationError) as e:
     adminMessagesCollection = None
     propertiesCollection = None
     listingCollection = None
+    logRequestsCollection = None
     print(f"Database initialization failed: {e}")
 
 
