@@ -9,7 +9,7 @@ class LogRequest:
     def __init__(
         self, request_type="", urgency_level="", property_address="",
         description="", submitted_date=None, status="pending",
-        log_request_id=None, archive=False
+        logged_by="", log_request_id=None, archive=False
     ):
         """Initializer/object constructor.
         Args:
@@ -29,6 +29,7 @@ class LogRequest:
         self.urgency_level = urgency_level
         self.property_address = property_address
         self.description = description
+        self.logged_by = logged_by
         self.status = status
         self.archive = archive
 
@@ -42,6 +43,7 @@ class LogRequest:
             "urgency_level": self.urgency_level,
             "property_address": self.property_address,
             "description": self.description,
+            "logged_by": self.logged_by,
             "status": self.status,
             "archive": self.archive
         }
