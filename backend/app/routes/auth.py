@@ -46,40 +46,37 @@ def authenticate(email, password, role):
 @auth_bp.route('/api/login', methods=['POST'])
 def login():
     if not request.is_json:
-        logging.debug("Request missing JSON")
         return jsonify({"msg": "Missing JSON in request"}), 400
-    
+
     data = request.get_json()
-    
-    if not data:
-        logging.debug("Invalid JSON")
-        return jsonify({"msg": "Invalid JSON"}), 400
-    
-    email = data.get('email').strip().lower()  # Ensure email is lowercased and stripped
+    email = data.get('email').strip().lower()
     password = data.get('password')
     role = data.get('role')
     remember_me = data.get('remember_me', False)
-    
+
     if not email or not password or not role:
-        logging.debug("Missing email, password, or role")
         return jsonify({"msg": "Missing email, password, or role"}), 400
-    
+
     user = authenticate(email, password, role)
-    
+
     if not user:
-        logging.debug("Authentication failed")
         return jsonify({"msg": "Invalid email, password, or role"}), 401
-    
+
     if role == 'tenant' and not user.get('active', False):
-        logging.debug("Tenant account is not active")
         return jsonify({"msg": "Account is not active"}), 403
-    
+
     expires = datetime.timedelta(days=7) if remember_me else datetime.timedelta(hours=1)
-    access_token = create_access_token(identity={"email": email, "role": role}, expires_delta=expires)
+    access_token = create_access_token(
+        identity={
+            "username": user["contact_details"]["email"],  # Ensure the username is set correctly
+            "role": role
+        },
+        expires_delta=expires
+    )
+
     response = jsonify(msg="You have successfully logged in", access_token=access_token)
     set_access_cookies(response, access_token)
-    
-    logging.debug("User authenticated successfully")
+
     return response
 
 @auth_bp.route('/api/forgot_password', methods=['POST'])

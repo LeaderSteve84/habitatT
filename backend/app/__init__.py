@@ -10,8 +10,10 @@ from app.config import Config
 from flask_mail import Mail, Message
 from flask_jwt_extended import JWTManager
 import logging
+from flask_socketio import SocketIO
 # Initialize mail instance globally
 mail = Mail()
+socketio = SocketIO(cors_allowed_origins="*")
 
 # Function to initialize MongoDB client
 def init_mongo_client(connection_string: str) -> MongoClient:
@@ -35,11 +37,13 @@ try:
     database: Database = mongo_client.get_database("habitatTdb")
     tenantsCollection: Collection = database.get_collection("tenants")
     adminsCollection: Collection = database.get_collection("admins")
+    messagesCollection = database.get_collection("messages")
 except (errors.ConnectionFailure, errors.ConfigurationError) as e:
     mongo_client = None
     database = None
     tenantsCollection = None
     adminsCollection = None
+    messagesCollection = None
     print(f"Database initialization failed: {e}")
 
 def create_app():
@@ -67,5 +71,6 @@ def create_app():
 
         # register blueprints
         app.register_blueprint(bp)
+        socketio.init_app(app)
 
     return app

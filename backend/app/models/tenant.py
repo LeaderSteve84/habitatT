@@ -36,7 +36,7 @@ class Tenant:
     def to_dict(self):
         """returns the dictionary of all the Tenant attributes"""
         return {
-            "_id": self.tenant_id,
+            "_id": str(self.tenant_id),
             "date_created": self.date_created,
             "name": self.name,
             "password": self.password,

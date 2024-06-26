@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """routes package init"""
 from flask import Blueprint
-from app.routes import tenant,auth,admin
+from app.routes import tenant,auth,admin,communication
 
 bp = Blueprint('main', __name__)
 
@@ -9,3 +9,4 @@ bp = Blueprint('main', __name__)
 bp.register_blueprint(tenant.tenant_bp)
 bp.register_blueprint(admin.admin_bp)
 bp.register_blueprint(auth.auth_bp)
+bp.register_blueprint(communication.communication_bp)

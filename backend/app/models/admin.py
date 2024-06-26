@@ -32,7 +32,7 @@ class Admin:
     def to_dict(self):
         """returns the dictionary of all the admin attributes"""
         return {
-            "_id": self.admin_id,
+            "_id": str(self.admin_id),
             "date_created": self.date_created,
             "name": self.name,
             "password": self.password,
