@@ -23,7 +23,8 @@ def create_log_request():
             request_type=data.get('requestType', ''),
             urgency_level=data.get('urgencyLevel', ''),
             property_address=data.get('propertyAddress', ''),
-            description=data.get('description', '')
+            description=data.get('description', ''),
+            logged_by=data.get('loggedBy', '')
         )
     except Exception as e:
         return jsonify({"error": str(e)}), 400
@@ -35,10 +36,10 @@ def create_log_request():
     except PyMongoError as e:
         return jsonify({"error": str(e)}), 500
 
-    log_request_id = inserted_result.inserted_id
+    log_request_id = insert_result.inserted_id
     return jsonify(
         {
-            "error": "Log request created successfully",
+            "msg": "Log request created successfully",
             "requestId": str(log_request_id)
         }
     ), 201
@@ -52,11 +53,12 @@ def get_all_log_requests():
     """
 
     try:
-        log_requests = logRequestCollection.find(
+        log_requests = logRequestsCollection.find(
             {"status": {"$ne": "resolved"}, "archive": False}
         )
-        log_requets_list = [{
+        log_requests_list = [{
             "requestedId": str(log_request['_id']),
+            "loggedBy": log_request['logged_by'],
             "submittedDate": log_request['submitted_date'],
             "requestType": log_request['request_type'],
             "urgencyLevel": log_request['urgency_level'],
@@ -79,6 +81,7 @@ def get_log_request(request_id):
         if log_request:
             return jsonify({
                 "requestId": str(log_request['_id']),
+                "loggedBy": log_request['logged_by'], 
                 "submittedDate": log_request['submitted_date'],
                 "requestType": log_request['request_type'],
                 "urgencyLevel": log_request['urgency_level'],
@@ -105,6 +108,7 @@ def update_log_request(request_id):
     try:
         update_data = {
             "request_type": data.get('requestType', ''),
+            "logged_by": data.get('loggedBy', ''),
             "urgency_level": data.get('urgencyLevel', ''),
             "property_address": data.get('propertyAddress', ''),
             "description": data.get('description', ''),
@@ -142,7 +146,7 @@ def update_log_request_status(request_id):
         return jsonify({"error": str(e)}), 400
 
     try:
-        result = LogRequestsCollection.update_one(
+        result = logRequestsCollection.update_one(
             {"_id": ObjectId(request_id)}, {"$set": update_data}
         )
         if result.matched_count == 0:
@@ -182,7 +186,7 @@ def archive_log_request(request_id):
 
 # close Log Request
 @log_request_bp.route(
-    '/api/admin/log_requests/<request_id>/close', methods=['PUT']
+    '/api/admin/log-requests/<request_id>/close', methods=['PUT']
 )
 def close_log_request(request_id):
     """Close a specific log request with a request_id.
