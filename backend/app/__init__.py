@@ -43,6 +43,7 @@ try:
     )
     listingCollection: Collection = database.get_collection("listing")
     logRequestsCollection: Collection = database.get_collection("logRequests")
+    adminsCollection: Collection = database.get_collection("admins")
 except (errors.ConnectionFailure, errors.ConfigurationError) as e:
     mongo_client = None
     database = None
@@ -51,6 +52,7 @@ except (errors.ConnectionFailure, errors.ConfigurationError) as e:
     propertiesCollection = None
     listingCollection = None
     logRequestsCollection = None
+    adminsCollection = None
     print(f"Database initialization failed: {e}")
 
 

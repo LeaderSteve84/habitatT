@@ -2,12 +2,13 @@
 """routes package init"""
 from flask import Blueprint
 from app.routes import tenant, auth, admin_message, \
-    property, listing, log_request
+    property, listing, log_request, admin
 
 bp = Blueprint('main', __name__)
 
 # Register the sub_blueprints to the main blueprint
 bp.register_blueprint(tenant.tenant_bp)
+bp.register_blueprint(admin.admin_bp)
 bp.register_blueprint(auth.auth_bp)
 bp.register_blueprint(admin_message.admin_message_bp)
 bp.register_blueprint(property.property_bp)
