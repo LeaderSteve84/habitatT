@@ -29,12 +29,19 @@ def create_log_request():
         return jsonify({"error": str(e)}), 400
 
     try:
-        insert_result = logRequestsCollection.insert_one(log_request_instance.to_dict())
+        insert_result = logRequestsCollection.insert_one(
+            log_request_instance.to_dict()
+        )
     except PyMongoError as e:
         return jsonify({"error": str(e)}), 500
 
     log_request_id = inserted_result.inserted_id
-    return jsonify({"error": "Log request created successfully", "requestID": str(log_request_id)}), 201
+    return jsonify(
+        {
+            "error": "Log request created successfully",
+            "requestId": str(log_request_id)
+        }
+    ), 201
 
 
 # Get All Open Log Requests
@@ -45,7 +52,9 @@ def get_all_log_requests():
     """
 
     try:
-        log_requests = logRequestCollection.find({"status": {"ne": "resolved"}, "archive": False})
+        log_requests = logRequestCollection.find(
+            {"status": {"$ne": "resolved"}, "archive": False}
+        )
         log_requets_list = [{
             "requestedId": str(log_request['_id']),
             "submittedDate": log_request['submitted_date'],
@@ -64,7 +73,9 @@ def get_all_log_requests():
 @log_request_bp.route('/api/admin/log-requests/<request_id>', methods=['GET'])
 def get_log_request(request_id):
     try:
-        log_request = logRequestsCollection.find_one({"_id": ObjectId(request_id)})
+        log_request = logRequestsCollection.find_one(
+            {"_id": ObjectId(request_id)}
+        )
         if log_request:
             return jsonify({
                 "requestId": str(log_request['_id']),
@@ -114,7 +125,9 @@ def update_log_request(request_id):
 
 
 # Update Log Request Status
-@log_request_bp.route('/api/admin/log-requests/<request_id>/status', methods=['PUT'])
+@log_request_bp.route(
+    '/api/admin/log-requests/<request_id>/status', methods=['PUT']
+)
 def update_log_request_status(request_id):
     """Update the status of a specific log request with a request_id.
     Args:
@@ -140,7 +153,9 @@ def update_log_request_status(request_id):
 
 
 # Archive Log Request
-@log_request_bp.route('/api/admin/log-requests/<request_id>/archive', methods=['PUT'])
+@log_request_bp.route(
+    '/api/admin/log-requests/<request_id>/archive', methods=['PUT']
+)
 def archive_log_request(request_id):
     """Archive a specific log request with a request_id.
     Args:
@@ -166,7 +181,9 @@ def archive_log_request(request_id):
 
 
 # close Log Request
-@log_request_bp.route('/api/admin/log_requests/<request_id>/close', methods=['PUT'])
+@log_request_bp.route(
+    '/api/admin/log_requests/<request_id>/close', methods=['PUT']
+)
 def close_log_request(request_id):
     """Close a specific log request with a request_id.
     Args:
@@ -178,7 +195,7 @@ def close_log_request(request_id):
             "status": data.get('status', 'resolved')
         }
     except Exception as e:
-        return jsonify({"error"; str(e)}), 400
+        return jsonify({"error": str(e)}), 400
 
     try:
         result = logRequestsCollection.update_one(
