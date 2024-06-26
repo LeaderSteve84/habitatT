@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
+"""All routes for tenant CRUD operations"""
 from flask import Blueprint, request, jsonify, url_for
-from flask_jwt_extended import create_access_token, set_access_cookies
+from flask_jwt_extended import JWTManager, create_access_token, \
+    jwt_required, set_access_cookies, unset_jwt_cookies
 from flask_mail import Message, Mail
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import tenantsCollection, adminsCollection
@@ -21,6 +23,9 @@ reset_tokens = {}
 # Utility functions
 def authenticate(email, password, role):
     email = email.strip().lower()
+    print(f"Authenticating user with email: {email}")  # Debug print statement
+
+    # Access email within nested contactDetails field
     logging.debug(f"Authenticating user with email: {email} and role: {role}")
     
     if role == 'admin':
@@ -43,18 +48,19 @@ def authenticate(email, password, role):
     
     return None
 
+
 @auth_bp.route('/api/login', methods=['POST'])
 def login():
     if not request.is_json:
         logging.debug("Request missing JSON")
         return jsonify({"msg": "Missing JSON in request"}), 400
-    
+
     data = request.get_json()
-    
+
     if not data:
         logging.debug("Invalid JSON")
         return jsonify({"msg": "Invalid JSON"}), 400
-    
+
     email = data.get('email').strip().lower()  # Ensure email is lowercased and stripped
     password = data.get('password')
     role = data.get('role')
@@ -78,18 +84,19 @@ def login():
     access_token = create_access_token(identity={"email": email, "role": role}, expires_delta=expires)
     response = jsonify(msg="You have successfully logged in", access_token=access_token)
     set_access_cookies(response, access_token)
-    
+
     logging.debug("User authenticated successfully")
     return response
+
 
 @auth_bp.route('/api/forgot_password', methods=['POST'])
 def forgot_password():
     if not request.is_json:
         return jsonify({"msg": "Missing JSON in request"}), 400
-    
+
     data = request.get_json()
     email = data.get('email')
-    
+
     if not email:
         return jsonify({"msg": "Missing email"}), 400
     
@@ -113,21 +120,22 @@ def forgot_password():
         current_app.logger.error(f"Failed to send email: {str(e)}")
         return jsonify({"msg": f"Failed to send email: {str(e)}"}), 500
 
+
 @auth_bp.route('/api/reset_password/<token>', methods=['POST'])
 def reset_password(token):
     if not request.is_json:
         return jsonify({"msg": "Missing JSON in request"}), 400
-    
+
     data = request.get_json()
     new_password = data.get('new_password')
     confirm_password = data.get('confirm_password')
-    
+
     if not new_password or not confirm_password:
         return jsonify({"msg": "Missing new password or confirmation"}), 400
-    
+
     if new_password != confirm_password:
         return jsonify({"msg": "Passwords do not match"}), 400
-    
+
     email = reset_tokens.get(token)
     if not email:
         return jsonify({"msg": "Invalid or expired token"}), 400
