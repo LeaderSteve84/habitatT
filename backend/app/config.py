@@ -2,6 +2,7 @@
 """configurations module"""
 import os
 from dotenv import load_dotenv
+import ast
 
 # Load environmental variables from .env file
 load_dotenv()
@@ -19,6 +20,7 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER')
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
-    JWT_TOKEN_LOCATION = os.environ.get('JWT_TOKEN_LOCATION')
+    JWT_TOKEN_LOCATION = ast.literal_eval(os.environ.get('JWT_TOKEN_LOCATION'))
     JWT_COOKIE_SECURE = os.environ.get('JWT_COOKIE_SECURE')
+    JWT_COOKIE_CSRF_PROTECT = False  # Add this line to disable CSRF protection
     

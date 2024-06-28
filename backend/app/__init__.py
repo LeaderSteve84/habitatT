@@ -10,8 +10,10 @@ from app.config import Config
 from flask_mail import Mail, Message
 from flask_jwt_extended import JWTManager
 import logging
+
 # Initialize mail instance globally
 mail = Mail()
+revoked_tokens = set()  # Set to store revoked JWT tokens
 
 # Function to initialize MongoDB client
 def init_mongo_client(connection_string: str) -> MongoClient:
@@ -26,7 +28,6 @@ def init_mongo_client(connection_string: str) -> MongoClient:
         print(f"Configuration error: {e}")
         raise
 
-
 # Mongo client initialization
 CONNECTION_STRING = Config.MONGO_URI
 
@@ -35,12 +36,8 @@ try:
     # Select database and collection from Atlas
     database: Database = mongo_client.get_database("habitatTdb")
     tenantsCollection: Collection = database.get_collection("tenantsTest")
-    adminMessagesCollection: Collection = database.get_collection(
-        "adminMessages"
-    )
-    propertiesCollection: Collection = database.get_collection(
-        "properties"
-    )
+    adminMessagesCollection: Collection = database.get_collection("adminMessages")
+    propertiesCollection: Collection = database.get_collection("properties")
     listingCollection: Collection = database.get_collection("listing")
     logRequestsCollection: Collection = database.get_collection("logRequests")
     adminsCollection: Collection = database.get_collection("admins")
@@ -55,7 +52,6 @@ except (errors.ConnectionFailure, errors.ConfigurationError) as e:
     adminsCollection = None
     print(f"Database initialization failed: {e}")
 
-
 def create_app():
     """return flask application"""
     app = Flask(__name__)
@@ -65,8 +61,9 @@ def create_app():
     mail.init_app(app)
     jwt = JWTManager(app)
 
-    # Enable CORS for all domains on all route
+    # Enable CORS for all domains on all routes
     CORS(app)
+    
     # Configure logging
     if not app.debug:
         app.logger.setLevel(logging.DEBUG)
@@ -76,11 +73,17 @@ def create_app():
         stream_handler.setFormatter(formatter)
         app.logger.addHandler(stream_handler)
 
+    # JWT blocklist loader function
+    @jwt.token_in_blocklist_loader
+    def check_if_token_is_revoked(jwt_header, jwt_payload):
+        jti = jwt_payload['jti']
+        return jti in revoked_tokens
+
     with app.app_context():
         # Import routes here to avoid circular imports
         from app.routes import bp
 
-        # register blueprints
+        # Register blueprints
         app.register_blueprint(bp)
 
     return app
