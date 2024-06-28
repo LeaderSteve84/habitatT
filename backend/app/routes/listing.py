@@ -6,7 +6,7 @@ from app import listingCollection
 from app.models.listing import Listing
 from pymongo.errors import PyMongoError
 from bson.errors import InvalidId
-
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 listing_bp = Blueprint('listing', __name__)
 

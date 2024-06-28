@@ -5,6 +5,7 @@ from bson.objectid import ObjectId
 from app import adminsCollection, mail
 from app.models.admin import Admin
 from pymongo.errors import PyMongoError
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Mail, Message
 import uuid
@@ -157,6 +158,7 @@ def update_admin(admin_id):
 
 # Deactivate/Delete admin Account
 @admin_bp.route('/api/admin/admins/<admin_id>', methods=['DELETE'])
+@jwt_required()
 def delete_admin(admin_id):
     """update a specific admin with a admin_id.
     setting the active attribute to False
