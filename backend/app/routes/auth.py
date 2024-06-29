@@ -68,6 +68,7 @@ def login():
     logging.debug("User authenticated successfully")
     return response
 
+
 @auth_bp.route('/api/forgot_password', methods=['POST'])
 def forgot_password():
     if not request.is_json:

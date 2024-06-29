@@ -9,10 +9,12 @@ from pymongo.database import Database
 from app.config import Config
 from flask_mail import Mail, Message
 from flask_jwt_extended import JWTManager
+from flask_socketio import SocketIO
 import logging
 
 # Initialize mail instance globally
 mail = Mail()
+socketio = SocketIO(cors_allowed_origins="*")
 revoked_tokens = set()  # Set to store revoked JWT tokens
 
 # Function to initialize MongoDB client
@@ -41,6 +43,7 @@ try:
     listingCollection: Collection = database.get_collection("listing")
     logRequestsCollection: Collection = database.get_collection("logRequests")
     adminsCollection: Collection = database.get_collection("admins")
+    messagesCollection: Collection = database.get_collection("messages")
 except (errors.ConnectionFailure, errors.ConfigurationError) as e:
     mongo_client = None
     database = None
@@ -50,6 +53,7 @@ except (errors.ConnectionFailure, errors.ConfigurationError) as e:
     listingCollection = None
     logRequestsCollection = None
     adminsCollection = None
+    messagesCollection = None
     print(f"Database initialization failed: {e}")
 
 def create_app():
@@ -60,6 +64,7 @@ def create_app():
     app.config.from_object(Config)
     mail.init_app(app)
     jwt = JWTManager(app)
+    socketio.init_app(app)
 
     # Enable CORS for all domains on all routes
     CORS(app)
