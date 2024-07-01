@@ -27,10 +27,10 @@ def upload_file_to_drive(file_path, file_name, mime_type):
     logger.info("Starting upload to Google Drive")
     
     # specify the folder id
-    folder_id = "1uDwOkVv55uPncLe_w2RuyJT70lWYn4xs"
+    # folder_id = "1uDwOkVv55uPncLe_w2RuyJT70lWYn4xs"
     file_metadata = {
-        'name': file_name,
-        'parents': [folder_id]        
+        'name': file_name
+        # 'parents': [folder_id]        
     }
     media = MediaFileUpload(file_path, mimetype=mime_type)
 
