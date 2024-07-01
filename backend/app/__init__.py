@@ -41,6 +41,7 @@ try:
     listingCollection: Collection = database.get_collection("listing")
     logRequestsCollection: Collection = database.get_collection("logRequests")
     adminsCollection: Collection = database.get_collection("admins")
+    documentsCollection: Collection = database.get_collection("documents") 
 except (errors.ConnectionFailure, errors.ConfigurationError) as e:
     mongo_client = None
     database = None
