@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
-import Login from './components/Login/Login';
+import React, { useState } from "react";
+import Authentication from "./components/Login/Authentication";
 
 
 export default function App() {
   return (
     <>
-    
-     <Login/>
-
+      <Authentication />
     </>
-  )
+  );
 }
