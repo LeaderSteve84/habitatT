@@ -19,7 +19,7 @@ def get_profile():
     role = identity.get('role')
     
     # Assuming you have separate collections for admins and tenants
-    collection = adminsCollection if role == 'admin' else tenantsCollection
+    collection = tenantsCollection
     user = collection.find_one({"contact_details.email": email})
     
     if not user:
