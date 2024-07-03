@@ -1,8 +1,3 @@
-import linkedin from '../../assets/linkedin.png'
-import email from '../../assets/mail.png'
-import twitter from '../../assets/twitter.png'
-import facebook from '../../assets/facebook.png'
-
 export default function Footer() {
     return (
         <section className="bg-green-800 text-white text-lg">
@@ -14,10 +9,10 @@ export default function Footer() {
                     <li>About Us</li>
                 </ul>
                 <div className="basis-1/3 flex justify-center gap-4  items-center">
-                    <img className='h-8' src={email} alt="email" />
-                    <img className='h-8' src={facebook} alt="facebook" />
-                    <img className='h-8' src={twitter} alt="twitter" />
-                    <img className='h-8' src={linkedin} alt="linkedIn" />
+                    <img className='h-8' src="https://ik.imagekit.io/rmhnagyqw/habitatT/mail.png?updatedAt=1720008711166" alt="email" />
+                    <img className='h-8' src="https://ik.imagekit.io/rmhnagyqw/habitatT/facebook.png?updatedAt=1720008710523" alt="facebook" />
+                    <img className='h-8' src="https://ik.imagekit.io/rmhnagyqw/habitatT/twitter.png?updatedAt=1720008710560" alt="twitter" />
+                    <img className='h-8' src="https://ik.imagekit.io/rmhnagyqw/habitatT/linkedin.png?updatedAt=1720008709820" alt="linkedIn" />
                 </div>
             </div>
             <p className="text-center">Copyright HabitatT 2024</p>
