@@ -1,11 +1,8 @@
-import { SolutionFeatures } from "../../ImageData"
-import ImageContent from "./ImageContent"
 import Navbar from "./Navbar"
 import SimpleSlider from "./Slider"
 import { Buildings, SolutionFeatures, Team } from "../../ImageData"
 import ImageContent from "./ImageContent"
 import Footer from "./Footer"
-import estate from '../../assets/estate.jpg'
 
 export default function Landing() {
     return (
@@ -15,10 +12,10 @@ export default function Landing() {
                 <SimpleSlider />
             </section>
 
-            <section className="features">
+            <section className="features bg-gray-700 p-4">
                 <h2 className="text-stone-600 text-lg font-bold">Why you need HabitatT</h2>
                 <div className="flex gap-4 p-4">
-                    <img src={estate} alt="estate" className="h-80" />
+                    <img src="https://ik.imagekit.io/rmhnagyqw/habitatT/estate.jpg?updatedAt=1720008741569" alt="estate" className="h-80" />
                     <ImageContent images={SolutionFeatures} className='flex' height='h-32' width='w-32' />
                 </div>
             </section>
