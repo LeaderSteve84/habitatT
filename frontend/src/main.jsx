@@ -11,6 +11,7 @@ import UploadDoc from './routes/UploadDoc.jsx'
 import ViewRequest from './routes/ViewRequest.jsx'
 import Home from './routes/Home.jsx'
 import './index.css'
+import WelcomePage from './components/admin/WelcomePage.jsx'
 
 
 const router = createBrowserRouter([
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
     path: '/home',
     element: <Home />,
     children: [
+      {
+        path: "/home/welcome",
+        element: <WelcomePage />
+      },
       {
         path: "/home/messages",
         element: <ChatBoard />
