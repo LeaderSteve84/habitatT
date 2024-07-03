@@ -1,5 +1,4 @@
 import { LuChevronFirst, LuChevronLast } from 'react-icons/lu';
-import logo from '../../assets/logo.png';
 import { CgMoreVertical } from 'react-icons/cg';
 import { createContext, useContext, useState } from 'react';
 const SidebarContext = createContext();
@@ -9,7 +8,7 @@ export default function Sidebar({ name, email, children }) {
         <aside className={`bg-white text-stone-100 h-screen transition-all duration-300 ${expanded ? "w-64" : "w-16"}`}>
             <nav className='h-full flex flex-col bg-white fixed border-r shadow-sm'>
                 <div className='p-4 pb-2 flex justify-between items-center'>
-                    <img src={logo} className={`overflow-hidden transition-all ${expanded ? "w-24 ml-3" : "w-0"}`} alt="habitatT" />
+                    <img src="https://ik.imagekit.io/rmhnagyqw/habitatT/logo.png?updatedAt=1720008714144" className={`overflow-hidden transition-all ${expanded ? "w-24 ml-3" : "w-0"}`} alt="habitatT" />
                     <button onClick={() => setExpanded(curr => !curr)} className='p-1.5 rounded-lg bg-gray-800 hover:bg-gray-500'>
                         {expanded ? <LuChevronFirst /> : <LuChevronLast />}
                     </button>
