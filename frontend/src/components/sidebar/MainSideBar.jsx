@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Sidebar, { SidebarItem } from './Sidebar';
 import { BiHome, BiMessage, BiLogOut } from 'react-icons/bi';
 import { CgProfile } from 'react-icons/cg';
