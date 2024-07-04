@@ -12,6 +12,8 @@ import ViewRequest from './routes/ViewRequest.jsx'
 import Home from './routes/Home.jsx'
 import './index.css'
 import WelcomePage from './components/admin/WelcomePage.jsx'
+import Login from './components/Login/Login.jsx'
+import Authentication from './components/Login/Authentication.jsx'
 
 
 const router = createBrowserRouter([
@@ -19,6 +21,10 @@ const router = createBrowserRouter([
     path: '/',
     element: <App />,
     errorElement: <ErrorPage />,
+  },
+  {
+    path: '/login',
+    element: <Authentication />
   },
   {
     path: '/home',
