@@ -15,6 +15,7 @@ import WelcomePage from './components/admin/WelcomePage.jsx'
 import Login from './components/Login/Login.jsx'
 import Authentication from './components/Login/Authentication.jsx'
 
+import { AuthProvider } from './components/context/AuthProvider.jsx'
 
 const router = createBrowserRouter([
   {
@@ -24,7 +25,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: <Authentication />
+    element: <Login />
   },
   {
     path: '/home',
@@ -62,6 +63,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>,
 )
