@@ -1,42 +1,64 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import AuthContext from "../context/AuthProvider";
 import logo from "../../assets/logo.jpeg";
 import { FaUser } from "react-icons/fa";
+import axios from "../../api/axios";
+
+const LOGIN_URL = '/login';
 
 export default function Login({ toggleForm }) {
+  const { setAuth } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('');
+  const [errMsg, setErrMsg] = useState('');
 
-  const defaultLoginDetails = {
-    email: "default_email@example.com",
-    password: "default_password",
-  };
+  useEffect(() => {
+    setErrMsg('');
+  }, [email, password]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (
-      email === defaultLoginDetails.email &&
-      password === defaultLoginDetails.password
-    ) {
-      console.log("Login successful!");
-      console.log('email:' + email)
-      console.log('password:' + password)
-    } else {
-      console.log("Invalid email or password");
 
+    try {
+      const response = await axios.post(
+        LOGIN_URL,
+        JSON.stringify({ email, password, role }),
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        }
+      );
+      console.log(JSON.stringify(response?.data));
+      const accessToken = response?.data.accessToken;
+      const role = response?.data?.role;
+      setAuth({ email, password, role, accessToken });
+      setEmail('');
+      setPassword('');
+    } catch (err) {
+      if (!err?.response) {
+        setErrMsg("No Server Response");
+      } else if (err.response?.status === 400) {
+        setErrMsg("Missing email or password");
+      } else if (err.response?.status === 401) {
+        setErrMsg("Unauthorized");
+      } else {
+        setErrMsg("Login Failed");
+      }
     }
   };
 
   return (
     <form
       action=""
-      className="flex-grow w-1/2 h-screen  bg-white"
+      className="flex-grow w-1/2 h-screen bg-white"
       onSubmit={handleSubmit}
     >
       <img src={logo} alt="Logo" className="w-20 h-auto mx-auto mt-10" />
       <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-gray-600 mx-auto mt-6">
         <FaUser className="w-6 h-6" />
       </div>
-      <p className="text-center ">LOGIN</p>
+      <p className="text-center">LOGIN</p>
       <div className="mb-4 text-center m-2">
         <label
           htmlFor="email"
@@ -71,7 +93,7 @@ export default function Login({ toggleForm }) {
         />
       </div>
 
-      <div className="flex  mb-4  justify-center">
+      <div className="flex mb-4 justify-center">
         <input
           id="keepSignedIn"
           name="keepSignedIn"
@@ -94,11 +116,13 @@ export default function Login({ toggleForm }) {
       </div>
       <div className="flex justify-center mb-2">
         <select
-          defaultValue="Selectb role"
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
           name="role"
           id="role"
           className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5"
         >
+          <option value="" disabled>Select role</option>
           <option value="admin">Admin</option>
           <option value="tenant">Tenant</option>
         </select>
@@ -110,6 +134,7 @@ export default function Login({ toggleForm }) {
       >
         Sign In
       </button>
+      {errMsg && <p className="text-center text-red-500">{errMsg}</p>}
     </form>
   );
 }
