@@ -20,16 +20,16 @@ HabitatT aims to provide a seamless communication channel for real estate profes
   - Tailwind CSS
 
 - **Backend:**
-  - Flask
+  - Flask (Python)
 
 - **Database:**
-  - MongoDB
+  - MongoDB Atlas
 
 ## Team
 - **Stephen Adah - Backend Developer**
   - Email: mailstephenreal@gmail.com
-  - Twitter: https://twitter.com/Elbest2018 <a href="https://twitter.com/Elbest2018"> Twitter </a>
-  - LinkedIn: https://www.linkedin.com/in/stephen-a-se-74614b145 <a href="https://www.linkedin.com/in/stephen-a-se-74614b145"> LinkedIn </a>
+  - Twitter: https://twitter.com/Elbest2018 <a href="https://twitter.com/Elbest2018"> (Twitter) </a>
+  - LinkedIn: https://www.linkedin.com/in/stephen-a-se-74614b145 <a href="https://www.linkedin.com/in/stephen-a-se-74614b145"> (LinkedIn) </a>
 
 - **Emmanuel Ochoja - Frontend Developer**
   - Email: emmanuelochoja@yahoo.com
