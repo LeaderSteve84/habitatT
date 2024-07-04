@@ -28,8 +28,8 @@ HabitatT aims to provide a seamless communication channel for real estate profes
 ## Team
 - **Stephen Adah - Backend Developer**
   - Email: mailstephenreal@gmail.com
-  - Twitter: <a href="https://twitter.com/Elbest2018"> Twitter </a> https://twitter.com/Elbest2018
-  - LinkedIn: <a href="https://www.linkedin.com/in/stephen-a-se-74614b145"> LinkedIn </a> https://www.linkedin.com/in/stephen-a-se-74614b145
+  - Twitter: https://twitter.com/Elbest2018 <a href="https://twitter.com/Elbest2018"> Twitter </a>
+  - LinkedIn: https://www.linkedin.com/in/stephen-a-se-74614b145 <a href="https://www.linkedin.com/in/stephen-a-se-74614b145"> LinkedIn </a>
 
 - **Emmanuel Ochoja - Frontend Developer**
   - Email: emmanuelochoja@yahoo.com
