@@ -9,6 +9,8 @@ from werkzeug.security import generate_password_hash
 from bson.errors import InvalidId
 import uuid
 import logging
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
 
 tenant_bp = Blueprint('tenant', __name__)
 reset_tokens = {}
@@ -27,6 +29,7 @@ def send_email(subject, recipients, body):
 
 # Create Tenant Account
 @tenant_bp.route('/api/admin/tenants', methods=['POST'])
+@jwt_required()
 def create_tenant():
     """Create tenant as instance of Tenant, post tenant to MongoDB database,
        and send notification email with a reset password link.
@@ -79,6 +82,7 @@ def create_tenant():
 
 # Get all tenants
 @tenant_bp.route('/api/admin/tenants', methods=['GET'])
+@jwt_required()
 def get_all_tenants():
     """Find all tenants from MongoDB and return a list of all the tenants."""
     try:
@@ -152,6 +156,7 @@ def get_tenant(tenant_id):
 
 # Update Specific Tenant Details
 @tenant_bp.route('/api/admin/tenants/<tenant_id>', methods=['PUT'])
+@jwt_required()
 def update_tenant(tenant_id):
     """Update a specific tenant with a tenant_id.
     Args:
@@ -189,6 +194,7 @@ def update_tenant(tenant_id):
 
 # Deactivate/Delete Tenant Account
 @tenant_bp.route('/api/admin/tenants/<tenant_id>', methods=['DELETE'])
+@jwt_required()
 def delete_tenant(tenant_id):
     """Update a specific tenant with a tenant_id, setting the active attribute to False.
     Args:

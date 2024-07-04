@@ -2,7 +2,7 @@
 """routes package init"""
 from flask import Blueprint
 from app.routes import tenant, auth, admin_message, \
-    property, listing, log_request, admin
+    property, listing, log_request, admin, communication,profile
 
 bp = Blueprint('main', __name__)
 
@@ -14,3 +14,5 @@ bp.register_blueprint(admin_message.admin_message_bp)
 bp.register_blueprint(property.property_bp)
 bp.register_blueprint(listing.listing_bp)
 bp.register_blueprint(log_request.log_request_bp)
+bp.register_blueprint(communication.communication_bp)
+bp.register_blueprint(profile.profile_bp)
