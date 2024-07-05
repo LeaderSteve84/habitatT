@@ -7,24 +7,19 @@ import { BsBuildingAdd } from "react-icons/bs";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { IoEyeOutline } from "react-icons/io5";
 import { Link } from 'react-router-dom';
-
 export default function MainSideBar({ name, email, isAdmin }) {
     const [isTenantManagementOpen, setIsTenantManagementOpen] = useState(false);
     const [isPropertyManagementOpen, setIsPropertyManagementOpen] = useState(false);
     const [isPropertyListingOpen, setIsPropertyListingOpen] = useState(false);
-
     const toggleTenantManagement = () => {
         setIsTenantManagementOpen(!isTenantManagementOpen);
     };
-
     const togglePropertyManagement = () => {
         setIsPropertyManagementOpen(!isPropertyManagementOpen);
     };
-
     const togglePropertyListing = () => {
         setIsPropertyListingOpen(!isPropertyListingOpen);
     };
-
     return (
         <div>
             <Sidebar name={name} email={email}>
