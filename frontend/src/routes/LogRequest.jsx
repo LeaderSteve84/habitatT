@@ -17,7 +17,7 @@ export default function LogRequest() {
     };
 
     return (
-        <div className="bg-acent30 h-screen">
+        <div className="bg-acent30 h-full">
             <h2 className="text-center">Log Request</h2>
 
             <form onSubmit={submitForm} className="w-2/4 m-auto mt-10">
