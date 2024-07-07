@@ -1,7 +1,6 @@
-export default function TenantManagement() {
+export default function AddTenant() {
     return (
         <div className="flex h-screen">
-            <MainSideBar name="John Anthony" email="janthony@habitat.org" />
 
             <div className="w-full bg-gray-400 flex flex-col">
                 <h1 className="text-center bg-slate-600 w-full p-4">Announcement</h1>
@@ -41,9 +40,9 @@ export default function TenantManagement() {
                     <input type="text" />
 
                     <div>
-                    <button>Add New Tenant</button>
-                    <button>Update Tenant</button>
-                    <button>View all Tenants</button>
+                        <button>Add New Tenant</button>
+                        <button>Update Tenant</button>
+                        <button>View all Tenants</button>
                     </div>
                 </div>
             </div>
