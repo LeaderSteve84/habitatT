@@ -12,8 +12,8 @@ export default function Sidebar({ name, email, children }) {
     };
 
     return (
-        <aside className={`bg-white text-stone-100 h-screen transition-all duration-300 ${expanded ? "w-64" : "w-16"}`}>
-            <nav className='h-full flex flex-col bg-white fixed border-r shadow-sm'>
+        <aside className={`bg-white text-stone-100 h-full fixed transition-all duration-300 ${expanded ? "w-64" : "w-16"}`}>
+            <nav className='h-full flex flex-col h-full bg-acent110 border-r shadow-sm'>
                 <div className='p-4 pb-2 flex justify-between items-center'>
                     <img src="https://ik.imagekit.io/rmhnagyqw/habitatT/logo.png?updatedAt=1720008714144" className={`overflow-hidden transition-all ${expanded ? "w-24 ml-3" : "w-0"}`} alt="habitatT" />
                     <button onClick={toggleSidebar} className='p-1.5 rounded-lg bg-gray-800 hover:bg-gray-500'>
