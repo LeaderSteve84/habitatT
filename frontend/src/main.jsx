@@ -18,7 +18,10 @@ import Authentication from './components/Login/Authentication.jsx'
 import { AuthProvider } from './components/context/AuthProvider.jsx'
 import AddTenant from './components/admin/AddTenant.jsx'
 import ListTenants from './components/admin/ListTenants.jsx'
-import ListProperty from './components/admin/ListProperty.jsx'
+import ListProperty from './components/admin/propertyManagement/ListProperty.jsx'
+import AddProperty from './components/admin/propertyManagement/AddProperty.jsx'
+import PublishProperty from './components/admin/propertyListing/PublishProperty.jsx'
+import ProtectedRoute from './components/ProtectedRoute.jsx'
 
 const router = createBrowserRouter([
   {
@@ -32,6 +35,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/home',
+
     element: <Home />,
     children: [
       {
@@ -49,6 +53,14 @@ const router = createBrowserRouter([
       {
         path: "/home/view-tenant",
         element: <ListTenants />
+      },
+      {
+        path: "/home/property-entries",
+        element: <AddProperty />
+      },
+      {
+        path: "/home/publish-property",
+        element: <PublishProperty />
       },
       {
         path: "/home/view-property",
