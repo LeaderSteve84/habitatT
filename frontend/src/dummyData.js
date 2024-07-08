@@ -204,3 +204,19 @@ export const tenantList = [
     emergencyName: "Tracy Larson",
   },
 ];
+
+export const propertyList = [
+  {
+    address: "123 Main St",
+    type: "Apartment",
+    unitAvailability: "Available",
+    rentalFee: 1500,
+  },
+  {
+    address: "456 Elm St",
+    type: "Condo",
+    unitAvailability: "Occupied",
+    rentalFee: 1800,
+  },
+  // ... (add more objects as needed)
+];
