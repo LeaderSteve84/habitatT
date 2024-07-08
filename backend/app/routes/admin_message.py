@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """All routes for admin message CRUD operations"""
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from bson.objectid import ObjectId
-from app import adminMessagesCollection
 from app.models.admin_message import AdminMessage
 from pymongo.errors import PyMongoError
 from bson.errors import InvalidId
@@ -10,6 +9,7 @@ from bson.errors import InvalidId
 
 admin_message_bp = Blueprint('admin_message', __name__)
 
+adminMessagesCollection = current_app.adminMessagesCollection
 
 # Create Admin Message
 @admin_message_bp.route('/api/admin/messages', methods=['POST'])

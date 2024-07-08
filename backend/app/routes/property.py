@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """All routes for property CRUD operations"""
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from bson.objectid import ObjectId
-from app import propertiesCollection
 from app.models.property import Property
 from pymongo.errors import PyMongoError
 from bson.errors import InvalidId
@@ -10,6 +9,7 @@ from bson.errors import InvalidId
 
 property_bp = Blueprint('property', __name__)
 
+propertiesCollection = current_app.propertiesCollection
 
 # Create Property
 @property_bp.route('/api/admin/properties', methods=['POST'])

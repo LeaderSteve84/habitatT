@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
 """Communication routes module"""
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime
 from bson import ObjectId
-from app import tenantsCollection, adminsCollection, messagesCollection, socketio
+from app import socketio
 from app.models.communication import CommunicationModel
 from flask_socketio import emit
 
 communication_bp = Blueprint('communication_bp', __name__)
+
+tenantsCollection = current_app.tenantsCollection
+adminsCollection = current_app.adminsCollection
+messagesCollection = current_app.messagesCollection
+
 communication_model = CommunicationModel(messagesCollection)
 
 def convert_objectid(obj):

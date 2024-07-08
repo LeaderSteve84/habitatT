@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """All routes for tenant CRUD operations"""
-from flask import Blueprint, request, jsonify, url_for
+from flask import Blueprint, request, jsonify, url_for, current_app
 from bson.objectid import ObjectId
-from app import tenantsCollection, mail, Message
+from app import mail, Message
 from app.models.tenant import Tenant
 from pymongo.errors import PyMongoError
 from werkzeug.security import generate_password_hash
@@ -14,6 +14,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 tenant_bp = Blueprint('tenant', __name__)
 reset_tokens = {}
+tenantsCollection = current_app.tenantsCollection
 
 # Set up basic logging
 logging.basicConfig(level=logging.DEBUG)

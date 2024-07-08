@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 """All routes for log request CRUD operations"""
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from bson.objectid import ObjectId
-from app import logRequestsCollection
 from app.models.log_request import LogRequest
 from pymongo.errors import PyMongoError
 from bson.errors import InvalidId
 
 
 log_request_bp = Blueprint('log_request', __name__)
-
+logRequestsCollection = current_app.logRequestsCollection
 
 # Create Log Request
 @log_request_bp.route('/api/admin/log-requests', methods=['POST'])

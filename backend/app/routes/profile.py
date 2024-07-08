@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, url_for, current_app
 from bson.objectid import ObjectId
-from app import adminsCollection, tenantsCollection, mail
+from app import mail
 from app.models.admin import Admin
 from pymongo.errors import PyMongoError
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -10,6 +10,8 @@ import uuid
 import logging
 
 profile_bp = Blueprint('profile_bp', __name__)
+adminsCollection = current_app.adminsCollection
+tenantsCollection = current_app.tenantsCollection
 
 @profile_bp.route('/api/profile', methods=['GET'])
 @jwt_required()

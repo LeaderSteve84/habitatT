@@ -4,7 +4,7 @@ from flask import Blueprint, request, jsonify, url_for, current_app
 from flask_jwt_extended import create_access_token, jwt_required, set_access_cookies, unset_jwt_cookies, get_jwt
 from flask_mail import Message, Mail
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import tenantsCollection, adminsCollection, mail
+from app import mail
 import datetime
 import uuid
 import logging
@@ -12,6 +12,9 @@ import logging
 auth_bp = Blueprint('auth_bp', __name__)
 reset_tokens = {}
 revoked_tokens = set()  # Move this to a shared location if needed
+
+tenantsCollection = current_app.tenantsCollection
+adminsCollection = current_app.adminsCollection
 
 # Utility functions
 def authenticate(email, password, role):

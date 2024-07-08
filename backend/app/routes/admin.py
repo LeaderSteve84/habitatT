@@ -2,7 +2,7 @@
 """All routes for admin CRUD operations"""
 from flask import Blueprint, request, jsonify, url_for, current_app
 from bson.objectid import ObjectId
-from app import adminsCollection, mail
+from app import mail
 from app.models.admin import Admin
 from pymongo.errors import PyMongoError
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -12,6 +12,8 @@ import uuid
 import logging
 
 admin_bp = Blueprint('admin', __name__)
+
+adminsCollection = current_app.adminsCollection
 
 # In-memory store for reset tokens
 reset_tokens = {}
