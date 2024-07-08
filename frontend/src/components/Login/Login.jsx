@@ -4,7 +4,7 @@ import logo from "../../assets/logo.jpeg";
 import { FaUser } from "react-icons/fa";
 import axios from "../../api/axios";
 
-const LOGIN_URL = '/login';
+const LOGIN_URL = '/api/login';
 
 export default function Login({ toggleForm }) {
   const { setAuth } = useContext(AuthContext);
