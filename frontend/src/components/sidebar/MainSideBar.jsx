@@ -12,19 +12,15 @@ export default function MainSideBar({ name, email, isAdmin }) {
     const [isTenantManagementOpen, setIsTenantManagementOpen] = useState(false);
     const [isPropertyManagementOpen, setIsPropertyManagementOpen] = useState(false);
     const [isPropertyListingOpen, setIsPropertyListingOpen] = useState(false);
-
     const toggleTenantManagement = () => {
         setIsTenantManagementOpen(!isTenantManagementOpen);
     };
-
     const togglePropertyManagement = () => {
         setIsPropertyManagementOpen(!isPropertyManagementOpen);
     };
-
     const togglePropertyListing = () => {
         setIsPropertyListingOpen(!isPropertyListingOpen);
     };
-
     return (
         <div>
             <Sidebar name={name} email={email}>
@@ -59,7 +55,7 @@ export default function MainSideBar({ name, email, isAdmin }) {
                                     <Link to="/home/property-entries">
                                         <SidebarItem icon={<BsBuildingAdd />} text="Property Entry" />
                                     </Link>
-                                    <Link to="/home/view-properties">
+                                    <Link to="/home/view-property">
                                         <SidebarItem icon={<IoEyeOutline />} text="View all Properties" />
                                     </Link>
                                 </div>

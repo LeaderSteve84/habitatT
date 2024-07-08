@@ -16,6 +16,9 @@ import Login from './components/Login/Login.jsx'
 import Authentication from './components/Login/Authentication.jsx'
 
 import { AuthProvider } from './components/context/AuthProvider.jsx'
+import AddTenant from './components/admin/AddTenant.jsx'
+import ListTenants from './components/admin/ListTenants.jsx'
+import ListProperty from './components/admin/ListProperty.jsx'
 
 const router = createBrowserRouter([
   {
@@ -38,6 +41,18 @@ const router = createBrowserRouter([
       {
         path: "/home/messages",
         element: <ChatBoard />
+      },
+      {
+        path: "/home/add-tenant",
+        element: <AddTenant />
+      },
+      {
+        path: "/home/view-tenant",
+        element: <ListTenants />
+      },
+      {
+        path: "/home/view-property",
+        element: <ListProperty />
       },
       {
         path: "/home/request",
