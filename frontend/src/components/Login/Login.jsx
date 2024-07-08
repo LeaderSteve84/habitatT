@@ -21,21 +21,23 @@ export default function Login({ toggleForm }) {
     event.preventDefault();
 
     try {
+      let data = {
+        "email": email,
+        "role": role,
+        "password": password
+      }
       const response = await axios.post(
-        LOGIN_URL,
-        JSON.stringify({ email, password, role }),
-        {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true,
-        }
+        LOGIN_URL, data
       );
       console.log(JSON.stringify(response?.data));
+
       const accessToken = response?.data.accessToken;
-      const role = response?.data?.role;
+      const role2 = response?.data?.role;
       setAuth({ email, password, role, accessToken });
       setEmail('');
       setPassword('');
     } catch (err) {
+      console.log("LOGIN ERROR", err);
       if (!err?.response) {
         setErrMsg("No Server Response");
       } else if (err.response?.status === 400) {
@@ -47,6 +49,7 @@ export default function Login({ toggleForm }) {
       }
     }
   };
+
 
   return (
     <form
