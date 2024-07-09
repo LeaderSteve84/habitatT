@@ -34,6 +34,8 @@ class TenantCreationTestCase(unittest.TestCase):
         test_create_tenant: Test case for creating a tenant account.
     """
 
+    ENDPOINT = '/api/admin/tenants'
+
     def setUp(self):
         """
         Set up the test environment before each test.
@@ -68,7 +70,7 @@ class TenantCreationTestCase(unittest.TestCase):
         )
         self.app_context.pop()
 
-    def test_create_tenant(self):
+def test_create_tenant(self):
         """
         Test case for creating a tenant account.
 
@@ -98,7 +100,7 @@ class TenantCreationTestCase(unittest.TestCase):
         }
 
         response = self.client.post(
-            '/api/admin/tenants',
+            self.ENDPOINT,
             headers=self.headers,
             content_type='application/json',
             data=json.dumps(tenant_data)
@@ -118,6 +120,82 @@ class TenantCreationTestCase(unittest.TestCase):
         self.assertIsNotNone(tenant)
         self.assertEqual(tenant['name']['fname'], 'Mike')
         self.assertEqual(tenant['name']['lname'], 'Doe')
+
+def test_create_tenant_missing_fields(self):
+        """
+        Test case for creating a tenant account with missing required fields..
+        """
+        tenant_data = {
+            "name": {"fname": "Mike"},
+            "password": "password123",
+            "DoB": "1990-01-01",
+            "sex": "M",
+            "contactDetails": {
+                "email": "mike.kush@example.com",
+                "phone": "1234567890",
+                "address": "145 Oramo St"
+            },
+            "emergencyContact": {
+                "name": "Jane Kush", "phone": "0987654321",
+                "address": "457 Sahdai St"
+            },
+            "tenancyInfo": {
+                "fees": 1000, "paid": 500, "datePaid": "2022-01-15",
+                "start": "2022-01-01", "expires": "2022-12-31", "arrears": "0"
+            },
+            "leaseAgreementDetails": "http://example.com/lease.pdf"
+        }
+
+        response = self.client.post(
+            self.ENDPOINT,
+            headers=self.headers,
+            content_type='application/json',
+            data=json.dumps(tenant_data)
+        )
+
+        self.assertEqual(response.status_code, 400)
+        response_data = response.get_json()
+        self.assertEqual(
+            response_data['msg'], 'Missing required fields'
+        )
+
+def test_create_tenant_invalid_email(self):
+        """
+        Test case for creating a tenant with an invalid email format.
+        """
+        tenant_data = {
+            "name": {"fname": "Mike", "lname": "Doe"},
+            "password": "password123",
+            "DoB": "1990-01-01",
+            "sex": "F",
+            "contactDetails": {
+                "email": "jane.doe",
+                "phone": "1234567890",
+                "address": "145 Oramo St"
+            },
+            "emergencyContact": {
+                "name": "Jane Kush", "phone": "0987654321",
+                "address": "457 Sahdai St"
+            },
+            "tenancyInfo": {
+                "fees": 1000, "paid": 500, "datePaid": "2022-01-15",
+                "start": "2022-01-01", "expires": "2022-12-31", "arrears": "0"
+            },
+            "leaseAgreementDetails": "http://example.com/lease.pdf"
+        }
+
+        response = self.client.post(
+            self.ENDPOINT,
+            headers=self.headers,
+            content_type='application/json',
+            data=json.dumps(tenant_data)
+        )
+
+        self.assertEqual(response.status_code, 400)
+        response_data = response.get_json()
+        self.assertEqual(
+            response_data['msg'], 'Invalid email format'
+        )
 
 
 if __name__ == '__main__':
