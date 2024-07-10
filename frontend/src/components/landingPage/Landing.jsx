@@ -10,6 +10,7 @@ import { FiUser, FiMessageSquare, FiClipboard, FiBell, FiHome, FiUpload, FiMail,
 import propertyManagerImage from "../../assets/propertymanager.png";
 import accountManagementImage from "../../assets/accountmgr.webp";
 import centralCommunicationImage from "../../assets/centralize.jpeg";
+import { Link } from "react-router-dom";
 
 const features = [
     {
@@ -68,7 +69,7 @@ const Landing = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {features.map((feature, index) => (
                             <div key={index} className="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center text-center">
-                                <div className="mb-4">{feature.icon}</div>
+                                <div className="mb-4 text-cyan-500">{feature.icon}</div>
                                 <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
                                 <p className="text-sm text-gray-600">{feature.tagline}</p>
                             </div>
@@ -118,7 +119,9 @@ const Landing = () => {
                         </li>
                     </ul>
                     <div className="flex justify-center mt-6">
-                        <button className="bg-blue-600 text-white px-32 py-2 rounded-lg">Login</button>
+                        <Link to="/login">
+                            <button className="bg-blue-600 text-white px-32 py-2 rounded-lg">Login</button>
+                        </Link>
                     </div>
                 </div>
                 <div className="flex-1 mt-8 md:mt-0 md:ml-8">
