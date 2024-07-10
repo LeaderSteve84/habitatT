@@ -6,10 +6,10 @@ import twoRoom from "../src/assets/two_room.jpg";
 import threeRoom from "../src/assets/three_room.jpg";
 import fourRoom from "../src/assets/four_room.jpg";
 import office from "../src/assets/office_space.jpg";
-import steve from "../src/assets/steve.jpg";
-import joy from "../src/assets/joy.jpg";
-import abdul from "../src/assets/abdul.jpg";
-import emma from "../src/assets/emma.jpg";
+import steve from "../src/assets/Stephen.png";
+import joy from "../src/assets/Omale.png";
+import abdul from "../src/assets/Abdullahi.png";
+import emma from "../src/assets/emmanuel.png";
 
 export const SolutionFeatures = [
   {
