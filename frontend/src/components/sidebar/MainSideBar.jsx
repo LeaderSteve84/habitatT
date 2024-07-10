@@ -6,31 +6,49 @@ import { FaRegAddressBook } from 'react-icons/fa';
 import { BsBuildingAdd } from "react-icons/bs";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { IoEyeOutline } from "react-icons/io5";
-import { Link } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
+import { HiSpeakerphone } from "react-icons/hi";
 
-export default function MainSideBar({ name, email, isAdmin }) {
+export default function MainSideBar({ name, email, isAdmin = true }) {
     const [isTenantManagementOpen, setIsTenantManagementOpen] = useState(false);
     const [isPropertyManagementOpen, setIsPropertyManagementOpen] = useState(false);
     const [isPropertyListingOpen, setIsPropertyListingOpen] = useState(false);
+    const [isAnnouncementOpen, setIsAnnoucementOpen] = useState(false);
+    const [isLogRequestOpen, setIsLogRequestOpen] = useState(false);
+
+
     const toggleTenantManagement = () => {
         setIsTenantManagementOpen(!isTenantManagementOpen);
     };
+
     const togglePropertyManagement = () => {
         setIsPropertyManagementOpen(!isPropertyManagementOpen);
     };
+
     const togglePropertyListing = () => {
         setIsPropertyListingOpen(!isPropertyListingOpen);
     };
+
+    const toggleAnnouncement = () => {
+        setIsAnnoucementOpen(!isAnnouncementOpen);
+    };
+
+    const toggleLogRequest = () => {
+        setIsLogRequestOpen(!isLogRequestOpen);
+    };
+
     return (
-        <div>
+        <div className="flex h-screen">
             <Sidebar name={name} email={email}>
+                {isAdmin ? <p className='text-acent50 text-2xl font-bold'>Admin</p> :
+                    <p className='text-acent50 text-2xl font-bold'>Tenant</p>}
                 <Link to="/home/welcome">
                     <SidebarItem icon={<BiHome />} text="Home" />
                 </Link>
                 {isAdmin && (
                     <>
                         <div>
-                            <div onClick={toggleTenantManagement} className="sidebar-item cursor-pointer flex items-center space-x-2">
+                            <div onClick={toggleTenantManagement} className="sidebar-item cursor-pointer flex items-center space-x-2 hover:bg-acent50">
                                 <IoMdAddCircleOutline />
                                 <span className='text-acent80 font-bold'>Tenant Management</span>
                             </div>
@@ -46,7 +64,7 @@ export default function MainSideBar({ name, email, isAdmin }) {
                             )}
                         </div>
                         <div>
-                            <div onClick={togglePropertyManagement} className="sidebar-item cursor-pointer flex items-center space-x-2">
+                            <div onClick={togglePropertyManagement} className="sidebar-item cursor-pointer flex items-center space-x-2 hover:bg-acent50">
                                 <BsBuildingAdd />
                                 <span className='text-acent80 font-bold'>Property Management</span>
                             </div>
@@ -62,7 +80,7 @@ export default function MainSideBar({ name, email, isAdmin }) {
                             )}
                         </div>
                         <div>
-                            <div onClick={togglePropertyListing} className="sidebar-item cursor-pointer flex items-center space-x-2">
+                            <div onClick={togglePropertyListing} className="sidebar-item cursor-pointer flex items-center space-x-2 hover:bg-acent50">
                                 <BsBuildingAdd />
                                 <span className='text-acent80 font-bold'>Property Listing</span>
                             </div>
@@ -71,7 +89,7 @@ export default function MainSideBar({ name, email, isAdmin }) {
                                     <Link to="/home/publish-property">
                                         <SidebarItem icon={<BiHome />} text="Publish Property" />
                                     </Link>
-                                    <Link to="/home/view-listed-property">
+                                    <Link to="/home/advert-property">
                                         <SidebarItem icon={<IoEyeOutline />} text="View Listed Properties" />
                                     </Link>
                                 </div>
@@ -82,16 +100,54 @@ export default function MainSideBar({ name, email, isAdmin }) {
                 <Link to="/home/messages">
                     <SidebarItem icon={<BiMessage />} text="Communication Board" />
                 </Link>
-                <Link to="/home/request">
-                    <SidebarItem icon={<FaRegAddressBook />} text="Log Request" />
-                </Link>
-                <Link to="/home/profile">
-                    <SidebarItem icon={<CgProfile />} text="Profile" />
-                </Link>
+                {isAdmin && (
+                    <>
+                        <div>
+                            <div onClick={toggleAnnouncement} className="sidebar-item cursor-pointer flex items-center space-x-2 hover:bg-acent50">
+                                < HiSpeakerphone />
+                                <span className='text-acent80 font-bold'>Announcement</span>
+                            </div>
+                            {isAnnouncementOpen && (
+                                <div className="ml-4">
+                                    <Link to="/home/add-tenant">
+                                        <SidebarItem icon={<IoMdAddCircleOutline />} text="Make Announcement" />
+                                    </Link>
+                                    <Link to="/home/view-tenant">
+                                        <SidebarItem icon={<IoEyeOutline />} text="All Announcements" />
+                                    </Link>
+                                </div>
+                            )}
+                        </div>
+                        <div>
+                            <div onClick={toggleLogRequest} className="sidebar-item cursor-pointer flex items-center space-x-2 hover:bg-acent50">
+                                <FaRegAddressBook />
+                                <span className='text-acent80 font-bold'>Log Request</span>
+                            </div>
+                            {isLogRequestOpen && (
+                                <div className="ml-4">
+                                    <Link to="/home/request">
+                                        <SidebarItem icon={<BsBuildingAdd />} text="Make Log Request" />
+                                    </Link>
+                                    <Link to="/home/view-property">
+                                        <SidebarItem icon={<IoEyeOutline />} text="View Log Request" />
+                                    </Link>
+                                </div>
+                            )}
+                        </div>
+                    </>
+                )}
+                {!isAdmin &&
+                    <Link to="/home/update-profile">
+                        <SidebarItem icon={<CgProfile />} text="Update Profile" />
+                    </Link>}
                 <Link to="/home/loggedout">
                     <SidebarItem icon={<BiLogOut />} text="Log Out" />
                 </Link>
             </Sidebar>
+
+            <div className="flex-grow bg-gray-100 p-4 ml-64">
+                <Outlet />
+            </div>
         </div>
     );
 }
