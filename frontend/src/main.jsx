@@ -22,6 +22,10 @@ import ListProperty from './components/admin/propertyManagement/ListProperty.jsx
 import AddProperty from './components/admin/propertyManagement/AddProperty.jsx'
 import PublishProperty from './components/admin/propertyListing/PublishProperty.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
+import NewPassword from './components/Login/CreateNewPassword.jsx'
+import ForgottenPassword from './components/Login/ForgetPassword.jsx'
+import MainSideBar from './components/sidebar/MainSideBar.jsx'
+import ListAdProperty from './components/admin/propertyListing/ListAdProperty.jsx'
 
 const router = createBrowserRouter([
   {
@@ -34,9 +38,23 @@ const router = createBrowserRouter([
     element: <Login />
   },
   {
+    path: '/new-password',
+    element: <NewPassword />
+  },
+  {
+    path: '/forgot-password',
+    element: <ForgottenPassword />
+  },
+  {
+    path: '/authenticate',
+    element: <Authentication />
+  },
+  {
     path: '/home',
 
-    element: <Home />,
+    element: <ProtectedRoute>
+      <MainSideBar />
+    </ProtectedRoute>,
     children: [
       {
         path: "/home/welcome",
@@ -63,6 +81,10 @@ const router = createBrowserRouter([
         element: <PublishProperty />
       },
       {
+        path: "/home/advert-property",
+        element: <ListAdProperty />
+      },
+      {
         path: "/home/view-property",
         element: <ListProperty />
       },
@@ -77,7 +99,7 @@ const router = createBrowserRouter([
         ]
       },
       {
-        path: "/home/profile",
+        path: "/home/update-profile",
         element: <Profile />
       },
       {
