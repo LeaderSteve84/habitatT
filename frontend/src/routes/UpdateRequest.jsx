@@ -40,7 +40,7 @@ export default function LogRequest() {
 
     return (
         <div className="bg-gray-100 h-full p-8">
-            <h2 className="text-2xl font-bold text-center mb-8">Create Log Request</h2>
+            <h2 className="text-2xl font-bold text-center mb-8">Update Log Request</h2>
 
             <form onSubmit={submitForm} className="w-full max-w-lg mx-auto bg-white p-8 shadow-lg rounded-lg">
                 <div className="mb-6">

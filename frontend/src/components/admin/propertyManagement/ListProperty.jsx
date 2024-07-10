@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { propertyList } from "../../dummyData";
+import { propertyList } from '../../../dummyData';
 
 export default function ListProperty() {
     return (

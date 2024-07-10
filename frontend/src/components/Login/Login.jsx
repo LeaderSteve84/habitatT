@@ -1,13 +1,15 @@
-import React, { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthProvider";
 import logo from "../../assets/logo.jpeg";
 import { FaUser } from "react-icons/fa";
 import axios from "../../api/axios";
 
-const LOGIN_URL = '/login';
+const LOGIN_URL = '/api/login';
 
 export default function Login({ toggleForm }) {
   const { setAuth } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
@@ -21,21 +23,24 @@ export default function Login({ toggleForm }) {
     event.preventDefault();
 
     try {
+      let data = {
+        "email": email,
+        "role": role,
+        "password": password
+      }
       const response = await axios.post(
-        LOGIN_URL,
-        JSON.stringify({ email, password, role }),
-        {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true,
-        }
+        LOGIN_URL, data
       );
       console.log(JSON.stringify(response?.data));
+
       const accessToken = response?.data.accessToken;
-      const role = response?.data?.role;
+      const role2 = response?.data?.role;
       setAuth({ email, password, role, accessToken });
       setEmail('');
       setPassword('');
+      navigate('/home');
     } catch (err) {
+      console.log("LOGIN ERROR", err);
       if (!err?.response) {
         setErrMsg("No Server Response");
       } else if (err.response?.status === 400) {
@@ -47,6 +52,7 @@ export default function Login({ toggleForm }) {
       }
     }
   };
+
 
   return (
     <form
