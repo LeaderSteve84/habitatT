@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 export default function Navbar() {
     return (
         <div className="flex bg-stone-500 text-stone-50 justify-between items-center p-4">
@@ -7,7 +8,11 @@ export default function Navbar() {
                 <li>About Us</li>
                 <li>Contact Us</li>
             </ul>
-            <button>Login</button>
+            <ul>
+                <Link to="/login">
+                    <li>Login</li>
+                </Link>
+            </ul>
         </div>
     )
 }
