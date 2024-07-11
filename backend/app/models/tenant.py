@@ -8,8 +8,8 @@ class Tenant:
     """class of the tenant instance"""
     def __init__(
         self, name, password, dob, sex, contact_details, emergency_contact,
-        tenancy_info, lease_agreement_details, date_updated=None,
-        tenant_id=None, active=True, role
+        tenancy_info, lease_agreement_details, role, date_updated=None,
+        tenant_id=None, active=True
     ):
         """Initializer/object constructor.
         Args:
