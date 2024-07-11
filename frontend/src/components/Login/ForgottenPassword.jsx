@@ -87,7 +87,7 @@ export default function ForgetPassword({ toggleForm }) {
             {loading ? 'Loading...' : 'Recover Password'}
           </button>
           {message && (
-            <div className={`mt-4 text-center ${error.startsWith('Error') ? 'text-red-500' : 'text-green-500'}`}>
+            <div className={`mt-4 text-center ${message.startsWith('Error') ? 'text-red-500' : 'text-green-500'}`}>
               {message}
             </div>
           )}
