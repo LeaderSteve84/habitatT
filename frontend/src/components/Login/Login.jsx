@@ -82,9 +82,10 @@ export default function Login({ toggleForm }) {
       };
       const response = await axios.post(LOGIN_URL, data);
       const accessToken = response?.data.accessToken;
+      const userRole = response?.data.role;
       
 
-      setAuth({ email, password, role, accessToken });
+      setAuth({ email, password, role: userRole, accessToken });
       setEmail('');
       setPassword('');
       navigate('/home/messages');

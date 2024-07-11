@@ -1,30 +1,30 @@
 import React, { useState } from "react";
 import logo from "../../assets/logo.jpeg";
 import { FaUnlock } from 'react-icons/fa';
+import axios from "../../api/axios";
 
-const FORGET_PASSWORD_URL = '/api/forget_password';
+const FORGET_PASSWORD_URL = '/api/forgot_password';
 
 export default function ForgetPassword({ toggleForm }) {
   const [email, setEmail] = useState('');
 
+  function handleChange(e) {
+    setEmail(e.target.value);
+    console.log(email, typeof(email))
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
+
     try {
-      const response = await fetch(FORGET_PASSWORD_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
+      const response = await axios.post(FORGET_PASSWORD_URL, email);
 
       if (!response.ok) {
         throw new Error('Failed to recover password');
       }
 
       // Handle success, e.g., show a success message or redirect
-      console.log('Password recovery request successful');
+      console.log('Password recovery request successful', email);
     } catch (error) {
       console.error('Error recovering password:', error.message);
       // Handle error, e.g., show an error message to the user
@@ -50,7 +50,7 @@ export default function ForgetPassword({ toggleForm }) {
             id="email"
             name="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleChange}
             className="mx-auto mt-1 block w-1/2 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             required
           />
