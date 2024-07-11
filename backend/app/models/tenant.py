@@ -9,7 +9,7 @@ class Tenant:
     def __init__(
         self, name, password, dob, sex, contact_details, emergency_contact,
         tenancy_info, lease_agreement_details, date_updated=None,
-        tenant_id=None, active=True
+        tenant_id=None, active=True, role
     ):
         """Initializer/object constructor.
         Args:
@@ -33,6 +33,7 @@ class Tenant:
         self.tenancy_info = tenancy_info
         self.lease_agreement_details = lease_agreement_details
         self.active = active
+        self.role = role
 
     def to_dict(self):
         """returns the dictionary of all the Tenant attributes"""
@@ -48,5 +49,6 @@ class Tenant:
             "emergency_contact": self.emergency_contact,
             "tenancy_info": self.tenancy_info,
             "lease_agreement_details": self.lease_agreement_details,
-            "active": self.active
+            "active": self.active,
+            "role": self.role
         }
