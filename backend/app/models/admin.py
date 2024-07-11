@@ -7,7 +7,7 @@ from datetime import datetime
 class Admin:
     """class of the admin instance"""
     def __init__(
-        self, name, password, dob, sex, contact_details, emergency_contact, admin_id=None,
+        self, name, password, dob, sex, contact_details, emergency_contact, role, admin_id=None,
         active=True
     ):
         """Initializer/object constructor.
@@ -27,6 +27,7 @@ class Admin:
         self.sex = sex
         self.contact_details = contact_details
         self.emergency_contact = emergency_contact
+        self.role = role
         self.active = active
 
     def to_dict(self):
@@ -40,5 +41,6 @@ class Admin:
             "sex": self.sex,
             "contact_details": self.contact_details,
             "emergency_contact": self.emergency_contact,
-            "active": self.active
+            "active": self.active,
+            "role": self.role
         }
