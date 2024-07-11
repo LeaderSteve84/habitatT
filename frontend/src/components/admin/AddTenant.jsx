@@ -1,17 +1,33 @@
 import axios from '../../api/axios';
+import AuthContext from '../context/AuthProvider';
 import useAuth from '../hooks/useAuth';
-import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { useContext, useState } from 'react';
+
+function generatePassword() {
+    const length = 8;
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let retVal = "";
+    for (let i = 0; i < length; ++i) {
+        retVal += charset.charAt(Math.floor(Math.random() * charset.length));
+    }
+    return retVal;
+}
+
+const randomPassword = generatePassword();
 
 export default function AddTenant() {
-    const { auth } = useAuth();
+    // const { auth } = useAuth();
+    const { setAuth } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
+        fname: '',
+        lname: '',
         email: '',
-        phoneNumber: '',
+        phone: '',
         address: '',
-        dateOfBirth: '',
+        DoB: '',
         sex: '',
         rentageFee: '',
         rentageAmount: '',
@@ -20,8 +36,9 @@ export default function AddTenant() {
         rentageExpires: '',
         arrears: '',
         emergencyName: '',
-        emergencyPhoneNumber: '',
-        emergencyAddress: ''
+        emergencyPhone: '',
+        emergencyAddress: '',
+        leaseAgreementDetails: ''
     });
 
     const handleChange = (e) => {
@@ -36,32 +53,65 @@ export default function AddTenant() {
         e.preventDefault();
 
         try {
-            const response = await axios.post('/api/tenants', JSON.stringify(formData), {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${auth.accessToken}`
+            const backendData = {
+                name: {
+                    fname: formData.fname,
+                    lname: formData.lname
                 },
-                withCredentials: true,
-            });
-            console.log("Tenant added successfully:", response.data);
+                password: randomPassword,
+                DoB: formData.DoB,
+                sex: formData.sex,
+                contactDetails: {
+                    email: formData.email,
+                    phone: formData.phone,
+                    address: formData.address
+                },
+                emergencyContact: {
+                    name: formData.emergencyName,
+                    phone: formData.emergencyPhone,
+                    address: formData.emergencyAddress
+                },
+                tenancyInfo: {
+                    fees: parseFloat(formData.rentageFee),
+                    paid: parseFloat(formData.rentageAmount),
+                    datePaid: formData.paidDate,
+                    start: formData.rentageStart,
+                    expires: formData.rentageExpires,
+                    arrears: formData.arrears
+                },
+                leaseAgreementDetails: formData.leaseAgreementDetails
+            };
+
+            const response = await axios.post('/api/admin/tenants', backendData,
+                // headers: {
+                //     'Content-Type': 'application/json',
+                //     'Authorization': `Bearer ${auth.accessToken}`
+                // },
+                // withCredentials: true,
+            );
+
+            console.log(backendData);
+
+            console.log("Tenant added successfully:", response.backendData);
+            navigate('/home/messages');
         } catch (err) {
             console.error("Error adding tenant:", err);
         }
     };
 
     return (
-        <div className="flex h-screen flex-col items-center justify-center bg-gray-100">
-            <h1 className="text-2xl fixed top-0  bg-acent70 font-bold text-center py-4 text-gray-800">Add New Tenant</h1>
+        <div className="flex flex-col items-center justify-center bg-gray-100">
+            <h1 className="text-2xl fixed top-0 font-bold text-center py-4 text-gray-800">Add New Tenant</h1>
             <div className="w-full max-w-3xl bg-white p-8 rounded-lg shadow-md mt-20">
                 <form onSubmit={submitForm} className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700">First Name</label>
-                            <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" />
+                            <input type="text" name="fname" value={formData.fname} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Last Name</label>
-                            <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" />
+                            <input type="text" name="lname" value={formData.lname} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" />
                         </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -71,7 +121,7 @@ export default function AddTenant() {
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Phone Number</label>
-                            <input type="text" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" />
+                            <input type="text" name="phone" value={formData.phone} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" />
                         </div>
                     </div>
                     <div>
@@ -81,7 +131,7 @@ export default function AddTenant() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
-                            <input type="date" name="dateOfBirth" value={formData.dateOfBirth} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" />
+                            <input type="date" name="DoB" value={formData.DoB} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Sex</label>
@@ -134,12 +184,16 @@ export default function AddTenant() {
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Emergency Phone Number</label>
-                            <input type="text" name="emergencyPhoneNumber" value={formData.emergencyPhoneNumber} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" />
+                            <input type="text" name="emergencyPhone" value={formData.emergencyPhone} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" />
                         </div>
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700">Emergency Address</label>
                         <input type="text" name="emergencyAddress" value={formData.emergencyAddress} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Lease Agreement Link</label>
+                        <input type="text" name="leaseAgreementDetails" value={formData.leaseAgreementDetails} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" />
                     </div>
                     <button type="submit" className="w-full py-2 px-4 bg-blue-600 text-white font-bold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
                         Add New Tenant
