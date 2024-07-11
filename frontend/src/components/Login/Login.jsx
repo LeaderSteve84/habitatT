@@ -81,12 +81,13 @@ export default function Login({ toggleForm }) {
         password,
       };
       const response = await axios.post(LOGIN_URL, data);
-
       const accessToken = response?.data.accessToken;
+      
+
       setAuth({ email, password, role, accessToken });
       setEmail('');
       setPassword('');
-      navigate('/home');
+      navigate('/home/messages');
     } catch (err) {
       console.log("LOGIN ERROR", err);
       if (!err?.response) {
@@ -100,6 +101,7 @@ export default function Login({ toggleForm }) {
       }
     }
   };
+
 
   return (
     <div className="flex h-screen">

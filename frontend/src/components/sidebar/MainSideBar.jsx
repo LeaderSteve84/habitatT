@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Sidebar, { SidebarItem } from './Sidebar';
 import { BiHome, BiMessage, BiLogOut } from 'react-icons/bi';
 import { CgProfile } from 'react-icons/cg';
@@ -8,13 +8,21 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 import { IoEyeOutline } from "react-icons/io5";
 import { Link, Outlet } from 'react-router-dom';
 import { HiSpeakerphone } from "react-icons/hi";
+import AuthContext from '../context/AuthProvider';
 
-export default function MainSideBar({ name, email, isAdmin = true }) {
+
+
+
+export default function MainSideBar({ name, email }) {
     const [isTenantManagementOpen, setIsTenantManagementOpen] = useState(false);
     const [isPropertyManagementOpen, setIsPropertyManagementOpen] = useState(false);
     const [isPropertyListingOpen, setIsPropertyListingOpen] = useState(false);
     const [isAnnouncementOpen, setIsAnnoucementOpen] = useState(false);
     const [isLogRequestOpen, setIsLogRequestOpen] = useState(false);
+
+    const { auth } = useContext(AuthContext);
+
+    const isAdmin = auth.role === 'admin'
 
 
     const toggleTenantManagement = () => {
