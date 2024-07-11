@@ -14,7 +14,7 @@ import './index.css'
 import WelcomePage from './components/admin/WelcomePage.jsx'
 import Login from './components/Login/Login.jsx'
 import Authentication from './components/Login/Authentication.jsx'
-
+import About from './components/landingPage/about/About.jsx'
 import { AuthProvider } from './components/context/AuthProvider.jsx'
 import AddTenant from './components/admin/AddTenant.jsx'
 import ListTenants from './components/admin/ListTenants.jsx'
