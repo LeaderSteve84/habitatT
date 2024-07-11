@@ -124,6 +124,13 @@ def reset_password(token):
         return jsonify({"msg": "User not found"}), 404
     
     new_hashed_password = generate_password_hash(new_password)
+    user_role = user.get('role')
+
+    logging.debug(f"Resseting password for user with role: {user_role}")
+
+    if user_role not in ['tenant', 'admin']:
+        return jsonify({"msg": "Invalid user role"}), 400
+
     collection = tenantsCollection if user.get('role') == 'tenant' else adminsCollection
     result = collection.update_one({"contact_details.email": email}, {"$set": {"password": new_hashed_password}})
     
