@@ -9,13 +9,11 @@ export default function ForgetPassword({ toggleForm }) {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
-  const [error, setError] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
     setMessage(null);
-    setError(null);
 
     try {
       const response = await fetch(FORGET_PASSWORD_URL, {
@@ -32,9 +30,16 @@ export default function ForgetPassword({ toggleForm }) {
         const data = await response.json();
         setMessage(data.msg);
       } else {
-        const errorText = await response.text();
-        const errorData = errorText ? JSON.parse(errorText) : {};
-        setError(errorData.msg || 'Failed to recover password');
+        let errorData = { msg: 'Failed to recover password' };
+        try {
+          const errorText = await response.text();
+          if (errorText) {
+            errorData = JSON.parse(errorText);
+          }
+        } catch (e) {
+          console.error('Error parsing error response:', e);
+        }
+        setMessage(errorData.msg || 'Failed to recover password');
       }
     } catch (error) {
       setLoading(false);
@@ -81,9 +86,9 @@ export default function ForgetPassword({ toggleForm }) {
           >
             {loading ? 'Loading...' : 'Recover Password'}
           </button>
-          {error && (
+          {message && (
             <div className={`mt-4 text-center ${error.startsWith('Error') ? 'text-red-500' : 'text-green-500'}`}>
-              {error}
+              {message}
             </div>
           )}
         </form>
