@@ -26,6 +26,7 @@ import NewPassword from './components/Login/CreateNewPassword.jsx'
 import ForgottenPassword from './components/Login/ForgottenPassword.jsx'
 import MainSideBar from './components/sidebar/MainSideBar.jsx'
 import ListAdProperty from './components/admin/propertyListing/ListAdProperty.jsx'
+import About from './components/landingPage/about/About.jsx'
 
 const router = createBrowserRouter([
   {
@@ -56,9 +57,9 @@ const router = createBrowserRouter([
   {
     path: '/home',
 
-    element: <ProtectedRoute>
+    element:
       <MainSideBar />
-    </ProtectedRoute>,
+    ,
     children: [
       {
         path: "/home/welcome",
