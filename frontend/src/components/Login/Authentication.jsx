@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import login from "../../assets/login.jpg";
 import Login from "./Login";
-import ForgottenPassword from "./ForgetPassword";
+import ForgottenPassword from "./ForgottenPassword";
 
 export default function Authentication() {
   const [isLogin, setIsLogin] = useState(true);

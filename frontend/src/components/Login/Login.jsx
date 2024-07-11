@@ -200,7 +200,7 @@ export default function Login({ toggleForm }) {
           <label htmlFor="keepSignedIn" className="ml-2 text-sm text-gray-900">
             Keep me signed in
           </label>
-          <Link to="/forget_password" className="text-sm pl-8 underline text-indigo-600 hover:underline">
+          <Link to="/forget-password" className="text-sm pl-8 underline text-indigo-600 hover:underline">
             Forgotten password?
           </Link>
         </div>

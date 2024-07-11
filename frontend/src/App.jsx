@@ -10,7 +10,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/forget_password" element={<ForgetPassword />} /> {/* Ensure this matches the Link */}
+        <Route path="/forget-password" element={<ForgetPassword />} /> {/* Ensure this matches the Link */}
       </Routes>
     </Router>
   );

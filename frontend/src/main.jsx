@@ -23,7 +23,7 @@ import AddProperty from './components/admin/propertyManagement/AddProperty.jsx'
 import PublishProperty from './components/admin/propertyListing/PublishProperty.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import NewPassword from './components/Login/CreateNewPassword.jsx'
-import ForgottenPassword from './components/Login/ForgetPassword.jsx'
+import ForgottenPassword from './components/Login/ForgottenPassword.jsx'
 import MainSideBar from './components/sidebar/MainSideBar.jsx'
 import ListAdProperty from './components/admin/propertyListing/ListAdProperty.jsx'
 
@@ -38,11 +38,15 @@ const router = createBrowserRouter([
     element: <Login />
   },
   {
+    path: '/about',
+    element: <About />
+  },
+  {
     path: '/new-password',
     element: <NewPassword />
   },
   {
-    path: '/forgot-password',
+    path: '/forget-password',
     element: <ForgottenPassword />
   },
   {
