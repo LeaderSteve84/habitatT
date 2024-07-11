@@ -51,6 +51,7 @@ export default function AddTenant() {
 
     const submitForm = async (e) => {
         e.preventDefault();
+        console.log(backendData);
 
         try {
             const backendData = {
@@ -95,6 +96,7 @@ export default function AddTenant() {
             console.log("Tenant added successfully:", response.backendData);
             navigate('/home/messages');
         } catch (err) {
+            console.log(backendData);
             console.error("Error adding tenant:", err);
         }
     };
