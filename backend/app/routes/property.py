@@ -117,7 +117,7 @@ def update_property(property_id):
             return jsonify({"msg": "Property not found"}), 404
         return jsonify({"msg": "Property updated successfully"}), 200
     except InvalidId:
-        return jsonify({"error": "Invalid tenant ID format"}), 404
+        return jsonify({"error": "Invalid Property ID format"}), 404
     except PyMongoError as e:
         return jsonify({"error": str(e)}), 500
 
