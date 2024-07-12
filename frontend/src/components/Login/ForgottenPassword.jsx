@@ -17,7 +17,7 @@ export default function ForgetPassword({ toggleForm }) {
     setMessage(null);
 
     console.log('Sending request to:', FORGET_PASSWORD_URL); 
-
+    console.log('Request body:', JSON.stringify({ email }));
     try {
       const response = await fetch(FORGET_PASSWORD_URL, {
         method: 'POST',
@@ -26,6 +26,7 @@ export default function ForgetPassword({ toggleForm }) {
         },
         body: JSON.stringify({ email }),
       });
+
       console.log('Response status:', response.status);
 
       setLoading(false);
