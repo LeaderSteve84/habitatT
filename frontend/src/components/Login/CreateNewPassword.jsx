@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import logo from "../../assets/logo.jpeg";
 import { FaKey } from 'react-icons/fa';
 
-export default function NewPassowrd() {
+export default function NewPassword() {
   return (
     <div className="flex-grow w-1/2 h-screen  bg-white">
       <form action="">

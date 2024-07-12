@@ -56,7 +56,8 @@ def create_tenant():
             contact_details=data['contactDetails'],
             emergency_contact=data['emergencyContact'],
             tenancy_info=data['tenancyInfo'],
-            lease_agreement_details=data['leaseAgreementDetails']
+            lease_agreement_details=data['leaseAgreementDetails'],
+            role=data['role']
         )
     except KeyError as e:
         return jsonify({"error": f"Missing field {str(e)}"}), 400

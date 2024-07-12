@@ -45,7 +45,8 @@ def create_admin():
             dob=data['DoB'],
             sex=data['sex'],
             contact_details=data['contactDetails'],
-            emergency_contact=data['emergencyContact']
+            emergency_contact=data['emergencyContact'],
+            role=data['role']
         )
     except KeyError as e:
         return jsonify({"error": f"Missing field {str(e)}"}), 400
