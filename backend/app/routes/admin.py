@@ -2,35 +2,32 @@
 """All routes for admin CRUD operations"""
 from flask import Blueprint, request, jsonify, url_for, current_app
 from bson.objectid import ObjectId
-from app import mail
+# from app import mail - use current_app instead
 from app.models.admin import Admin
 from pymongo.errors import PyMongoError
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_mail import Mail, Message
+from flask_mail import Message  # Mail - no need to import Mail
 import uuid
-import logging
 
 admin_bp = Blueprint('admin', __name__)
-
+logger = current_app.logger
+mail = current_app.mail
 adminsCollection = current_app.adminsCollection
 
 # In-memory store for reset tokens
 reset_tokens = {}
 
-# Set up basic logging
-logging.basicConfig(level=logging.DEBUG)
-
 def send_email(subject, recipients, body):
     msg = Message(subject=subject, recipients=recipients, body=body)
     try:
         mail.send(msg)
-        logging.debug(f"Email sent to {recipients}")
+        logger.debug(f"Email sent to {recipients}")
     except Exception as e:
-        logging.error(f"Failed to send email to {recipients}: {e}")
+        logger.error(f"Failed to send email to {recipients}: {e}")
 
 # Create admin Account
-@admin_bp.route('/api/admin/admins', methods=['POST'])
+@admin_bp.route('/api/admin/admins', methods=['POST', 'OPTIONS'])
 def create_admin():
     """create admin as instance of admin.
        post admin to mongodb database.
@@ -70,7 +67,7 @@ def create_admin():
     return jsonify({"msg": "admin created successfully", "adminId": str(admin_id)}), 201
 
 # Get all admins
-@admin_bp.route('/api/admin/admins', methods=['GET'])
+@admin_bp.route('/api/admin/admins', methods=['GET', 'OPTIONS'])
 def get_all_admins():
     """find all admins fron mongodb and
     return list of all the admins
@@ -96,7 +93,7 @@ def get_all_admins():
         return jsonify({"error": str(e)}), 500
 
 # Get a Specific admin Details
-@admin_bp.route('/api/admin/admins/<admin_id>', methods=['GET'])
+@admin_bp.route('/api/admin/admins/<admin_id>', methods=['GET', 'OPTIONS'])
 def get_admin(admin_id):
     try:
         admin = adminsCollection.find_one(
@@ -127,7 +124,7 @@ def get_admin(admin_id):
         return jsonify({"error": str(e)}), 400
 
 # Update Specific admin Details
-@admin_bp.route('/api/admin/admins/<admin_id>', methods=['PUT'])
+@admin_bp.route('/api/admin/admins/<admin_id>', methods=['PUT', 'OPTIONS'])
 def update_admin(admin_id):
     """update a specific admin with a admin_id.
     Args:
@@ -160,7 +157,7 @@ def update_admin(admin_id):
         return jsonify({"error": str(e)}), 500
 
 # Deactivate/Delete admin Account
-@admin_bp.route('/api/admin/admins/<admin_id>', methods=['DELETE'])
+@admin_bp.route('/api/admin/admins/<admin_id>', methods=['DELETE', 'OPTIONS'])
 @jwt_required()
 def delete_admin(admin_id):
     """update a specific admin with a admin_id.
@@ -181,7 +178,7 @@ def delete_admin(admin_id):
         return jsonify({"error": str(e)}), 500
 
 # Forgot Password
-@admin_bp.route('/api/admin/forgot_password', methods=['POST'])
+@admin_bp.route('/api/admin/forgot_password', methods=['POST', 'OPTIONS'])
 def forgot_password():
     if not request.is_json:
         return jsonify({"msg": "Missing JSON in request"}), 400
@@ -207,11 +204,11 @@ def forgot_password():
         mail.send(msg)
         return jsonify({"msg": "Password Reset email sent"}), 200
     except Exception as e:
-        current_app.logger.error(f"Failed to send email: {str(e)}")
+        logger.error(f"Failed to send email: {str(e)}")
         return jsonify({"msg": f"Failed to send email: {str(e)}"}), 500
 
 # Reset Password
-@admin_bp.route('/api/admin/reset_password/<token>', methods=['POST'])
+@admin_bp.route('/api/admin/reset_password/<token>', methods=['POST', 'OPTIONS'])
 def reset_password(token):
     if not request.is_json:
         return jsonify({"msg": "Missing JSON in request"}), 400

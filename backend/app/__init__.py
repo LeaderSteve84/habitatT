@@ -7,10 +7,13 @@ from pymongo import MongoClient, errors
 from pymongo.collection import Collection
 from pymongo.database import Database
 from app.config import Config
+from app.config import RequestFormatter
 from flask_mail import Mail, Message
 from flask_jwt_extended import JWTManager
 from flask_socketio import SocketIO
 import logging
+from logging.handlers import RotatingFileHandler
+from logging.handlers import SMTPHandler
 
 # Initialize mail instance globally
 mail = Mail()
@@ -51,6 +54,30 @@ def initialize_collections(client: MongoClient, db_name: str):
     )
 
 
+# configuration logging before app creation,
+# for stream, file and mail handlers.
+logger = logging.getLogger()
+formatter = RequestFormatter(
+    '[%(asctime)s] %(remote_addr)s requested %(url)s \
+    %(levelname)s in %(module)s: %(message)s'
+)
+logger.setLevel(logging.DEBUG)
+
+# add stream handler to the root logger
+streamHandler = logging.StreamHandler()
+streamHandler.setLevel(logging.DEBUG)
+streamHandler.setFormatter(formatter)
+logger.addHandler(streamHandler)
+
+# add file handler to the root logger
+fileHandler = RotatingFileHandler(
+    'habitatT.log', backupCount=100, maxBytes=1024
+)
+fileHandler.setLevel(logging.DEBUG)
+fileHandler.setFormatter(formatter)
+logger.addHandler(fileHandler)
+
+
 def create_app(config_name='default'):
     """return flask application"""
     app = Flask(__name__)
@@ -62,22 +89,31 @@ def create_app(config_name='default'):
         app.config.from_object(Config)
 
     mail.init_app(app)
+    app.mail = mail
     jwt = JWTManager(app)
     socketio.init_app(app)
 
-    # Enable CORS for all domains on all routes
-    CORS(app)
+    # create SMTP handler to be added to the root logger
+    mail_handler = SMTPHandler(
+        mailhost=(
+            app.config['MAIL_SERVER'],
+            app.config['MAIL_PORT']
+        ),
+        fromaddr=app.config['MAIL_DEFAULT_SENDER'],
+        toaddrs=['steveadahson@gmail.com', 'hakeemabdullah87@gmail.com'],
+        subject='System error - log'
+    )
+    mail_handler.setLevel(logging.ERROR)
+    mail_handler.setFormatter(formatter)
+    app.logger.addHandler(mail_handler)
 
-    # Configure logging
-    if not app.debug:
-        app.logger.setLevel(logging.DEBUG)
-        stream_handler = logging.StreamHandler()
-        stream_handler.setLevel(logging.DEBUG)
-        formatter = logging.Formatter(
-            '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-        )
-        stream_handler.setFormatter(formatter)
-        app.logger.addHandler(stream_handler)
+    # Enable CORS for all domains on all routes
+    CORS(
+        app, supports_credentials=True,
+        resources={r"/api/*": {"origins": "*"}},
+        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allow_headers=["Content-Type", "Authorization"]
+    )
 
     # JWT blocklist loader function
     @jwt.token_in_blocklist_loader

@@ -2,34 +2,32 @@
 """All routes for tenant CRUD operations"""
 from flask import Blueprint, request, jsonify, url_for, current_app
 from bson.objectid import ObjectId
-from app import mail, Message
+from flask_mail import Message
 from app.models.tenant import Tenant
 from pymongo.errors import PyMongoError
 from werkzeug.security import generate_password_hash
 from bson.errors import InvalidId
 import uuid
-import logging
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 tenant_bp = Blueprint('tenant', __name__)
+logger = current_app.logger
+mail = current_app.mail
 reset_tokens = {}
 tenantsCollection = current_app.tenantsCollection
-
-# Set up basic logging
-logging.basicConfig(level=logging.DEBUG)
 
 # Utility function to send emails
 def send_email(subject, recipients, body):
     msg = Message(subject=subject, recipients=recipients, body=body)
     try:
         mail.send(msg)
-        logging.debug(f"Email sent to {recipients}")
+        logger.debug(f"Email sent to {recipients}")
     except Exception as e:
-        logging.error(f"Failed to send email to {recipients}: {e}")
+        logger.error(f"Failed to send email to {recipients}: {e}")
 
 # Create Tenant Account
-@tenant_bp.route('/api/admin/tenants', methods=['POST'])
+@tenant_bp.route('/api/admin/tenants', methods=['POST', 'OPTIONS'])
 @jwt_required()
 def create_tenant():
     """Create tenant as instance of Tenant, post tenant to MongoDB database,
@@ -83,7 +81,7 @@ def create_tenant():
 
 
 # Get all tenants
-@tenant_bp.route('/api/admin/tenants', methods=['GET'])
+@tenant_bp.route('/api/admin/tenants', methods=['GET', 'OPTIONS'])
 @jwt_required()
 def get_all_tenants():
     """Find all tenants from MongoDB and return a list of all the tenants."""
@@ -117,7 +115,7 @@ def get_all_tenants():
 
 
 # Get a Specific Tenant Details
-@tenant_bp.route('/api/admin/tenants/<tenant_id>', methods=['GET'])
+@tenant_bp.route('/api/admin/tenants/<tenant_id>', methods=['GET', 'OPTIONS'])
 def get_tenant(tenant_id):
     try:
         tenant = tenantsCollection.find_one(
@@ -157,7 +155,7 @@ def get_tenant(tenant_id):
 
 
 # Update Specific Tenant Details
-@tenant_bp.route('/api/admin/tenants/<tenant_id>', methods=['PUT'])
+@tenant_bp.route('/api/admin/tenants/<tenant_id>', methods=['PUT', 'OPTIONS'])
 @jwt_required()
 def update_tenant(tenant_id):
     """Update a specific tenant with a tenant_id.
@@ -195,7 +193,7 @@ def update_tenant(tenant_id):
 
 
 # Deactivate/Delete Tenant Account
-@tenant_bp.route('/api/admin/tenants/<tenant_id>', methods=['DELETE'])
+@tenant_bp.route('/api/admin/tenants/<tenant_id>', methods=['DELETE', 'OPTIONS'])
 @jwt_required()
 def delete_tenant(tenant_id):
     """Update a specific tenant with a tenant_id, setting the active attribute to False.
@@ -217,7 +215,7 @@ def delete_tenant(tenant_id):
 
 # Update Tenant Contact Information
 @tenant_bp.route(
-    '/api/tenants/<tenant_id>/emergencycontacts', methods=['PUT']
+    '/api/tenants/<tenant_id>/emergencycontacts', methods=['PUT', 'OPTIONS']
 )
 def update_tenant_contact(tenant_id):
     """Update contact information for a specific tenant"""
@@ -247,7 +245,7 @@ def update_tenant_contact(tenant_id):
 
 
 # Get Lease Agreements
-@tenant_bp.route('/api/tenants/<tenant_id>/lease-agreements', methods=['GET'])
+@tenant_bp.route('/api/tenants/<tenant_id>/lease-agreements', methods=['GET', 'OPTIONS'])
 def get_lease_agreements(tenant_id):
     """Get lease agreements for a specific tenant"""
     try:
