@@ -70,8 +70,9 @@ streamHandler.setFormatter(formatter)
 logger.addHandler(streamHandler)
 
 # add file handler to the root logger
+# maxBytes is 50MB size
 fileHandler = RotatingFileHandler(
-    'habitatT.log', backupCount=100, maxBytes=1024
+    'habitatT.log', backupCount=10, maxBytes=52428800
 )
 fileHandler.setLevel(logging.DEBUG)
 fileHandler.setFormatter(formatter)
@@ -89,11 +90,11 @@ def create_app(config_name='default'):
         app.config.from_object(Config)
 
     mail.init_app(app)
-    app.mail = mail
+    app.mail = mail  # set mail into app context
     jwt = JWTManager(app)
     socketio.init_app(app)
 
-    # create SMTP handler to be added to the root logger
+    # create SMTP handler and added to the root logger
     mail_handler = SMTPHandler(
         mailhost=(
             app.config['MAIL_SERVER'],
@@ -107,7 +108,7 @@ def create_app(config_name='default'):
     mail_handler.setFormatter(formatter)
     app.logger.addHandler(mail_handler)
 
-    # Enable CORS for all domains on all routes
+    # Enable CORS for all origins on all routes
     CORS(
         app, supports_credentials=True,
         resources={r"/api/*": {"origins": "*"}},
